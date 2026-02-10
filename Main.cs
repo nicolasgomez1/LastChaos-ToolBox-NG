@@ -278,7 +278,7 @@ namespace LastChaos_ToolBoxNG
 			{
 				httpClient.DefaultRequestHeaders.Add("User-Agent", "C# HttpClient");
 
-				using (HttpResponseMessage httpResponse = await httpClient.GetAsync("https://api.github.com/repos/nicolasgomez1/LastChaos-ToolBox-2024/releases"))
+				using (HttpResponseMessage httpResponse = await httpClient.GetAsync("https://api.github.com/repos/nicolasgomez1/LastChaos-ToolBox-NG/releases"))
 				{
 					if (httpResponse.IsSuccessStatusCode)
 					{
