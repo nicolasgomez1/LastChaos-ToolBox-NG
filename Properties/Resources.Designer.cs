@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace LastChaos_ToolBox_2024.Properties {
+namespace LastChaos_ToolBoxNG.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace LastChaos_ToolBox_2024.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LastChaos_ToolBox_2024.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("LastChaos_ToolBoxNG.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,9 +63,29 @@ namespace LastChaos_ToolBox_2024.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap DefaultIcon {
+        internal static System.Drawing.Bitmap DefaultItem {
             get {
-                object obj = ResourceManager.GetObject("DefaultIcon", resourceCulture);
+                object obj = ResourceManager.GetObject("DefaultItem", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DefaultMonster {
+            get {
+                object obj = ResourceManager.GetObject("DefaultMonster", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap DefaultSkill {
+            get {
+                object obj = ResourceManager.GetObject("DefaultSkill", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -77,6 +97,16 @@ namespace LastChaos_ToolBox_2024.Properties {
             get {
                 object obj = ResourceManager.GetObject("NG", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap TitleBackground {
+            get {
+                object obj = ResourceManager.GetObject("TitleBackground", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

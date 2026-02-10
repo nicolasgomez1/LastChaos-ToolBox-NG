@@ -1,4 +1,4 @@
-﻿namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
     partial class SkillPicker
     {
@@ -20,160 +20,170 @@
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-			this.btnRemoveSkill = new System.Windows.Forms.Button();
-			this.tbSearch = new System.Windows.Forms.TextBox();
-			this.MainList = new System.Windows.Forms.ListBox();
-			this.btnSelect = new System.Windows.Forms.Button();
-			this.cbLevelSelector = new System.Windows.Forms.ComboBox();
-			this.pbIcon = new System.Windows.Forms.PictureBox();
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.tbDescription = new System.Windows.Forms.TextBox();
-			((System.ComponentModel.ISupportInitialize)(this.pbIcon)).BeginInit();
-			this.groupBox1.SuspendLayout();
-			this.SuspendLayout();
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			btnRemoveSkill = new Button();
+			tbSearch = new TextBox();
+			MainList = new ListBox();
+			btnSelect = new Button();
+			cbLevelSelector = new ComboBox();
+			pbIcon = new PictureBox();
+			groupBox1 = new GroupBox();
+			tbDescription = new TextBox();
+			((ISupportInitialize)pbIcon).BeginInit();
+			groupBox1.SuspendLayout();
+			SuspendLayout();
 			// 
 			// btnRemoveSkill
 			// 
-			this.btnRemoveSkill.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.btnRemoveSkill.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.btnRemoveSkill.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.btnRemoveSkill.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnRemoveSkill.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.btnRemoveSkill.Location = new System.Drawing.Point(298, 270);
-			this.btnRemoveSkill.Name = "btnRemoveSkill";
-			this.btnRemoveSkill.Size = new System.Drawing.Size(224, 23);
-			this.btnRemoveSkill.TabIndex = 1014;
-			this.btnRemoveSkill.Text = "Remove Skill";
-			this.btnRemoveSkill.UseVisualStyleBackColor = true;
-			this.btnRemoveSkill.Click += new System.EventHandler(this.btnRemoveSkill_Click);
+			btnRemoveSkill.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnRemoveSkill.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnRemoveSkill.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnRemoveSkill.FlatStyle = FlatStyle.Flat;
+			btnRemoveSkill.ForeColor = Color.FromArgb(208, 203, 148);
+			btnRemoveSkill.Location = new Point(348, 322);
+			btnRemoveSkill.Margin = new Padding(4, 3, 4, 3);
+			btnRemoveSkill.Name = "btnRemoveSkill";
+			btnRemoveSkill.Size = new Size(263, 27);
+			btnRemoveSkill.TabIndex = 1014;
+			btnRemoveSkill.Text = "Remove Skill";
+			btnRemoveSkill.UseVisualStyleBackColor = true;
+			btnRemoveSkill.Click += btnRemoveSkill_Click;
 			// 
 			// tbSearch
 			// 
-			this.tbSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.tbSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.tbSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.tbSearch.Location = new System.Drawing.Point(12, 12);
-			this.tbSearch.Name = "tbSearch";
-			this.tbSearch.Size = new System.Drawing.Size(280, 20);
-			this.tbSearch.TabIndex = 1026;
-			this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
-			this.tbSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSearch_KeyDown);
+			tbSearch.BackColor = Color.FromArgb(28, 30, 31);
+			tbSearch.BorderStyle = BorderStyle.FixedSingle;
+			tbSearch.ForeColor = Color.FromArgb(208, 203, 148);
+			tbSearch.Location = new Point(13, 12);
+			tbSearch.Margin = new Padding(4, 3, 4, 3);
+			tbSearch.Name = "tbSearch";
+			tbSearch.Size = new Size(327, 23);
+			tbSearch.TabIndex = 1026;
+			tbSearch.TextChanged += tbSearch_TextChanged;
+			tbSearch.KeyDown += tbSearch_KeyDown;
 			// 
 			// MainList
 			// 
-			this.MainList.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.MainList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.MainList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.MainList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.MainList.FormattingEnabled = true;
-			this.MainList.Location = new System.Drawing.Point(12, 44);
-			this.MainList.Name = "MainList";
-			this.MainList.Size = new System.Drawing.Size(280, 249);
-			this.MainList.TabIndex = 1027;
-			this.MainList.SelectedIndexChanged += new System.EventHandler(this.MainList_SelectedIndexChanged);
+			MainList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+			MainList.BackColor = Color.FromArgb(28, 30, 31);
+			MainList.BorderStyle = BorderStyle.FixedSingle;
+			MainList.ForeColor = Color.FromArgb(208, 203, 148);
+			MainList.FormattingEnabled = true;
+			MainList.Location = new Point(13, 47);
+			MainList.Margin = new Padding(4, 3, 4, 3);
+			MainList.Name = "MainList";
+			MainList.Size = new Size(327, 302);
+			MainList.TabIndex = 1027;
+			MainList.SelectedIndexChanged += MainList_SelectedIndexChanged;
 			// 
 			// btnSelect
 			// 
-			this.btnSelect.Enabled = false;
-			this.btnSelect.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.btnSelect.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.btnSelect.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.btnSelect.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnSelect.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.btnSelect.Location = new System.Drawing.Point(6, 223);
-			this.btnSelect.Name = "btnSelect";
-			this.btnSelect.Size = new System.Drawing.Size(212, 23);
-			this.btnSelect.TabIndex = 1028;
-			this.btnSelect.Text = "Select Skill && Level";
-			this.btnSelect.UseVisualStyleBackColor = true;
-			this.btnSelect.Click += new System.EventHandler(this.btnSelect_Click);
+			btnSelect.Enabled = false;
+			btnSelect.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnSelect.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnSelect.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnSelect.FlatStyle = FlatStyle.Flat;
+			btnSelect.ForeColor = Color.FromArgb(208, 203, 148);
+			btnSelect.Location = new Point(8, 271);
+			btnSelect.Margin = new Padding(4, 3, 4, 3);
+			btnSelect.Name = "btnSelect";
+			btnSelect.Size = new Size(248, 27);
+			btnSelect.TabIndex = 1028;
+			btnSelect.Text = "Select Skill && Level";
+			btnSelect.UseVisualStyleBackColor = true;
+			btnSelect.Click += btnSelect_Click;
 			// 
 			// cbLevelSelector
 			// 
-			this.cbLevelSelector.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.cbLevelSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-			this.cbLevelSelector.Enabled = false;
-			this.cbLevelSelector.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.cbLevelSelector.FormattingEnabled = true;
-			this.cbLevelSelector.Location = new System.Drawing.Point(6, 196);
-			this.cbLevelSelector.Name = "cbLevelSelector";
-			this.cbLevelSelector.Size = new System.Drawing.Size(212, 21);
-			this.cbLevelSelector.TabIndex = 1029;
+			cbLevelSelector.BackColor = Color.FromArgb(28, 30, 31);
+			cbLevelSelector.DropDownStyle = ComboBoxStyle.DropDownList;
+			cbLevelSelector.Enabled = false;
+			cbLevelSelector.ForeColor = Color.FromArgb(208, 203, 148);
+			cbLevelSelector.FormattingEnabled = true;
+			cbLevelSelector.Location = new Point(8, 242);
+			cbLevelSelector.Margin = new Padding(4, 3, 4, 3);
+			cbLevelSelector.Name = "cbLevelSelector";
+			cbLevelSelector.Size = new Size(248, 23);
+			cbLevelSelector.TabIndex = 1029;
 			// 
 			// pbIcon
 			// 
-			this.pbIcon.BackgroundImage = global::LastChaos_ToolBox_2024.Properties.Resources.DefaultIcon;
-			this.pbIcon.ErrorImage = null;
-			this.pbIcon.InitialImage = null;
-			this.pbIcon.Location = new System.Drawing.Point(6, 19);
-			this.pbIcon.Name = "pbIcon";
-			this.pbIcon.Size = new System.Drawing.Size(32, 32);
-			this.pbIcon.TabIndex = 13;
-			this.pbIcon.TabStop = false;
+			pbIcon.BackgroundImage = Properties.Resources.DefaultSkill;
+			pbIcon.ErrorImage = null;
+			pbIcon.InitialImage = null;
+			pbIcon.Location = new Point(7, 22);
+			pbIcon.Margin = new Padding(4, 3, 4, 3);
+			pbIcon.Name = "pbIcon";
+			pbIcon.Size = new Size(32, 32);
+			pbIcon.TabIndex = 13;
+			pbIcon.TabStop = false;
 			// 
 			// groupBox1
 			// 
-			this.groupBox1.Controls.Add(this.tbDescription);
-			this.groupBox1.Controls.Add(this.pbIcon);
-			this.groupBox1.Controls.Add(this.btnSelect);
-			this.groupBox1.Controls.Add(this.cbLevelSelector);
-			this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.groupBox1.Location = new System.Drawing.Point(298, 12);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(224, 252);
-			this.groupBox1.TabIndex = 1030;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Skill Data";
+			groupBox1.Controls.Add(tbDescription);
+			groupBox1.Controls.Add(pbIcon);
+			groupBox1.Controls.Add(btnSelect);
+			groupBox1.Controls.Add(cbLevelSelector);
+			groupBox1.ForeColor = Color.FromArgb(208, 203, 148);
+			groupBox1.Location = new Point(348, 12);
+			groupBox1.Margin = new Padding(4, 3, 4, 3);
+			groupBox1.Name = "groupBox1";
+			groupBox1.Padding = new Padding(4, 3, 4, 3);
+			groupBox1.Size = new Size(263, 304);
+			groupBox1.TabIndex = 1030;
+			groupBox1.TabStop = false;
+			groupBox1.Text = "Skill Data";
 			// 
 			// tbDescription
 			// 
-			this.tbDescription.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.tbDescription.BorderStyle = System.Windows.Forms.BorderStyle.None;
-			this.tbDescription.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.tbDescription.Location = new System.Drawing.Point(6, 57);
-			this.tbDescription.Multiline = true;
-			this.tbDescription.Name = "tbDescription";
-			this.tbDescription.ReadOnly = true;
-			this.tbDescription.Size = new System.Drawing.Size(212, 133);
-			this.tbDescription.TabIndex = 1030;
+			tbDescription.BackColor = Color.FromArgb(40, 40, 40);
+			tbDescription.BorderStyle = BorderStyle.None;
+			tbDescription.ForeColor = Color.FromArgb(208, 203, 148);
+			tbDescription.Location = new Point(8, 60);
+			tbDescription.Margin = new Padding(4, 3, 4, 3);
+			tbDescription.Multiline = true;
+			tbDescription.Name = "tbDescription";
+			tbDescription.ReadOnly = true;
+			tbDescription.Size = new Size(248, 176);
+			tbDescription.TabIndex = 1030;
 			// 
 			// SkillPicker
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.ClientSize = new System.Drawing.Size(534, 305);
-			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.MainList);
-			this.Controls.Add(this.tbSearch);
-			this.Controls.Add(this.btnRemoveSkill);
-			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-			this.Icon = global::LastChaos_ToolBox_2024.Properties.Resources.NG;
-			this.MaximizeBox = false;
-			this.MinimizeBox = false;
-			this.Name = "SkillPicker";
-			this.ShowInTaskbar = false;
-			this.Text = "Skill Picker";
-			this.Load += new System.EventHandler(this.SkillPicker_LoadAsync);
-			((System.ComponentModel.ISupportInitialize)(this.pbIcon)).EndInit();
-			this.groupBox1.ResumeLayout(false);
-			this.groupBox1.PerformLayout();
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			BackColor = Color.FromArgb(40, 40, 40);
+			ClientSize = new Size(624, 361);
+			Controls.Add(groupBox1);
+			Controls.Add(MainList);
+			Controls.Add(tbSearch);
+			Controls.Add(btnRemoveSkill);
+			FormBorderStyle = FormBorderStyle.FixedSingle;
+			Icon = Properties.Resources.NG;
+			Margin = new Padding(4, 3, 4, 3);
+			MaximizeBox = false;
+			MinimizeBox = false;
+			MinimumSize = new Size(640, 400);
+			Name = "SkillPicker";
+			ShowInTaskbar = false;
+			Text = "Skill Picker";
+			Load += SkillPicker_LoadAsync;
+			((ISupportInitialize)pbIcon).EndInit();
+			groupBox1.ResumeLayout(false);
+			groupBox1.PerformLayout();
+			ResumeLayout(false);
+			PerformLayout();
 
-        }
-        #endregion
+		}
+		#endregion
 
-        private System.Windows.Forms.Button btnRemoveSkill;
+		private System.Windows.Forms.Button btnRemoveSkill;
         private System.Windows.Forms.TextBox tbSearch;
         private System.Windows.Forms.ListBox MainList;
         private System.Windows.Forms.Button btnSelect;

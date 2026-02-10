@@ -1,0 +1,247 @@
+[Settings]
+MySQLHost = 127.0.0.1
+MySQLUsername = tools
+MySQLPassword = iddqd
+MySQLDBAuth = lc_auth
+MySQLDBData = lc_data_dummy
+MySQLDBUser = lc_user
+Charset = utf8
+
+; This is the postfix that will be used by default for the different tools. For example, depending on the postfix defined here, the names that will appear in the tool lists will be selected.
+WorkLocale = USA
+DockToTop = false
+MaximizeOnStartUp = false
+ClientPath = D:\Documents\LastChaos Files\SourceBinLibs\ClientBinaries
+
+; Here the suffixes of the nations that will be requested when making a select and everything consequent are defined.
+; In my case I eliminated everything related to the rest of the nations, so I only load these 3, but in a more generic case, more could be added.
+NationSupported = USA,SPN,BRZ
+
+; DeepL API URL & Key to use with DB String Translator & OX Editor
+DeepLURL =
+DeepLAPIKey =
+
+; Export results from expoter: true = local folder, false = client folder
+ExportToLocal = true
+
+;Range from 1 ~ 2. At value 2, logs of subqueries of the Exporter dialog will be generated. Which increases execution times
+LogVerbose = 1
+
+[3DViewerDialog]
+ItemEditor = false
+NPCEditor = false
+ShopEditor = false
+
+[ChangesAppliedNotification]
+DailyRewardEditor = true
+MoonstoneEditor = true
+
+[Exporter]
+TWN = false
+CHN = false
+THAI = false
+JPN = false
+MAL = false
+USA = true
+BRZ = true
+HK = false
+GER = false
+SPN = true
+FRC = false
+PLD = false
+RUS = false
+TUR = false
+ITA = false
+MEX = false
+NLD = false
+UK = false
+;NPCSHOP = false
+;NPCHELP = false
+LACARETTE = false
+AFFINITY = false
+COMBO = false
+ACTION = false
+SPECIALSKILL = false
+SKILL = false
+QUEST = false
+NPCNAME = false
+RAREOPTION = false
+OPTION = false
+ITEMCOLLECTION = false
+SETITEM = false
+ITEM = false
+HELP1 = false
+STRING = false
+ITEMS = false
+MOONSTONES = false
+LACARETTES = false
+CATALOGS = false
+SMC = false
+MONSTERCOMBO = false
+ITEMEXCHANGES = false
+SPECIALSKILLS = false
+SKILLS = false
+EQUIPMENTEXCHANGES = false
+NPCCHANNELS = false
+ACTIONS = false
+SKILLTREES = false
+SHOPS = false
+QUESTS = false
+RAREOPTIONS = false
+BIGPETS = false
+MOBS = false
+OPTIONS = false
+TITLES = false
+MAPS = false
+NPCHELP = false
+AFFINITIES = false
+DATAITEMCOLLECTION = false
+ITEMFORTUNE = false
+MOBHELP = false
+DATASETITEM = false
+ZONEFLAG = false
+
+[ControlPanel]
+ServerPath = D:\Documents\LastChaos Files\SourceBinLibs\ServerBinaries
+TextEditorPath = D:\Program Files\Sublime Text\sublime_text.exe
+NkspLaunchArgument = fkzktlfgod!
+AutoReUp = false
+MaxReUpTrys = 2
+StartCashServerOnStartAll = false
+
+Auth = Auth DB, Event DB, User DB, DB_Auth, logDB, DB_DB
+Data = Data DB, Catalog DB, DB_Data
+User = Char DB
+
+MessengerBinary = Messenger.exe
+ConnectorBinary = Connector.exe
+HelperBinary = Helper.exe
+SubHelperBinary = SubHelper.exe
+LoginServerBinary = LoginServer.exe
+CashServerBinary = CashServer.exe
+GameServer1Binary = GameServer1.exe
+GameServer2Binary = GameServer2.exe
+GameServer3Binary = GameServer3.exe
+GameServer4Binary = GameServer4.exe
+
+MessengerCatchLogs = true
+ConnectorCatchLogs = false
+HelperCatchLogs = false
+SubHelperCatchLogs = false
+LoginServerCatchLogs = false
+CashServerCatchLogs = false
+GameServer1CatchLogs = false
+GameServer2CatchLogs = false
+GameServer3CatchLogs = false
+GameServer4CatchLogs = false
+
+[ControlPanelFilters]
+ERROR = GameServer1, Messenger, Connector, Helper, SubHelper, LoginServer, CashServer
+FATAL = 
+DEBUG = 
+INFO = Connector, Helper, SubHelper, LoginServer, CashServer, Messenger
+WAR CASTLE = 
+Messenger = 
+Connector = 
+Helper = 
+SubHelper = 
+LoginServer = 
+CashServer = 
+MYSQL CLIENT VERSION = 
+RVR System Save = 
+CONNECTED = 
+Disconnected from = 
+HACK_QUICK = 
+HACK_PULSE = 
+HACK QUICK = 
+HACK PULSE = 
+HACK_WEAPON = 
+HACK WEAPON = 
+HACK USER = 
+HACK_USER = 
+HACK_PULSE_NOT_RESPONSE = 
+HACK PULSE NOT RESPONSE = 
+HACK_CHECK = 
+HACK CHECK = 
+TELEPORT_HACK = 
+TELEPORT HACK = 
+HACK_ATTACK = 
+HACK ATTACK = 
+MOVE_HACK = 
+MOVE HACK = 
+HACK_MOVE = 
+HACK MOVE = 
+ITEM_DROP = 
+ITEM_LOAD = 
+GM COMMAND = 
+ITEM_JUNK = 
+ITEM_PICK = 
+ITEM_SELL = 
+ITEM_BUY = 
+ITEM_BREAK = 
+ITEM_EXCHANGE = 
+ITEM_ADJUST = 
+ITEM_UPGRADE = 
+ITEM_MIX = 
+ITEM_PROCESS = 
+ITEM_PROCESS_SAMPLE = 
+ITEM_OPTION_DEL = 
+ITEM_OPTION_ADD = 
+ITEM_REFINE = 
+ITEM_ARCANE = 
+ITEM_PICK_QUESTPRIZE = 
+ITEM_PICK_LEVELUP = 
+WEAR ITEM = 
+CHAR_UPDATE = 
+CHAR_DELETE = 
+CHAR_CREATE = 
+CHAR_LOAD = 
+REBIRTH PC = 
+LEVEL_UP = 
+HAVE_MONEY = 
+PERSONAL SHOP BUY = 
+PERSONAL SHOP START = 
+CHAR_DEAUTH = 
+GUILD_NEW = 
+GUILD_CREATE = 
+GUILD_DEL = 
+GUILD_KICK = 
+GUILD_LEAVE = 
+GUILD_SET_GRADE = 
+GUILD_JOIN = 
+BAD_CONNECTION = 
+SYS_ERROR = 
+SYS_ERR = GameServer1
+CONN_ERR = 
+INVALID_VERSION = 
+STASH_IN = 
+STASH_OUT = 
+JOIN = 
+DISCONNECT = 
+QUEST REQUEST = 
+QUEST START = 
+QUEST COMPLETE = 
+QUEST GIVEUP = 
+QUEST FAIL = 
+QUEST PRIZE = 
+QUEST ERROR = 
+TITLE ITEM USE = 
+TITLE SELECT = 
+MOB DEAD = 
+MOB DROP MONEY = 
+MOB DROP ITEM = 
+MOB REGEN = 
+CASH_ASSIST_DEL = 
+CASH_ABS_ASSIST = 
+CASH_MEMPOS_STASH_TIME = 
+EP SKILL END = 
+EP SKILL START = 
+SKILL LEARN = 
+MSG_BILLITEM_SERVERLIVE = 
+CASTLE NPC REGEN = 
+LastChaos Running... = GameServer1
+NICOLASG = Connector, GameServer1, SubHelper
+GoZone = 
+ANTICHEAT = GameServer1
+OX EVENT = 
+OXEVENT = 

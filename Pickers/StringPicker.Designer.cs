@@ -1,4 +1,4 @@
-﻿namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	partial class StringPicker
 	{
@@ -28,74 +28,75 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.btnRemoveString = new System.Windows.Forms.Button();
-			this.tbSearch = new System.Windows.Forms.TextBox();
-			this.MainList = new System.Windows.Forms.ListBox();
-			this.SuspendLayout();
+			btnRemoveString = new Button();
+			tbSearch = new TextBox();
+			MainList = new ListBox();
+			SuspendLayout();
 			// 
 			// btnRemoveString
 			// 
-			this.btnRemoveString.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRemoveString.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.btnRemoveString.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.btnRemoveString.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.btnRemoveString.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.btnRemoveString.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.btnRemoveString.Location = new System.Drawing.Point(12, 465);
-			this.btnRemoveString.Name = "btnRemoveString";
-			this.btnRemoveString.Size = new System.Drawing.Size(359, 23);
-			this.btnRemoveString.TabIndex = 1014;
-			this.btnRemoveString.Text = "Remove String";
-			this.btnRemoveString.UseVisualStyleBackColor = true;
-			this.btnRemoveString.Click += new System.EventHandler(this.btnRemoveString_Click);
+			btnRemoveString.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+			btnRemoveString.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnRemoveString.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnRemoveString.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnRemoveString.FlatStyle = FlatStyle.Flat;
+			btnRemoveString.ForeColor = Color.FromArgb(208, 203, 148);
+			btnRemoveString.Location = new Point(13, 322);
+			btnRemoveString.Margin = new Padding(4, 3, 4, 3);
+			btnRemoveString.Name = "btnRemoveString";
+			btnRemoveString.Size = new Size(598, 27);
+			btnRemoveString.TabIndex = 1014;
+			btnRemoveString.Text = "Remove String";
+			btnRemoveString.UseVisualStyleBackColor = true;
+			btnRemoveString.Click += btnRemoveString_Click;
 			// 
 			// tbSearch
 			// 
-			this.tbSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.tbSearch.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.tbSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.tbSearch.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.tbSearch.Location = new System.Drawing.Point(12, 12);
-			this.tbSearch.Name = "tbSearch";
-			this.tbSearch.Size = new System.Drawing.Size(359, 20);
-			this.tbSearch.TabIndex = 1026;
-			this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
-			this.tbSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSearch_KeyDown);
+			tbSearch.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+			tbSearch.BackColor = Color.FromArgb(28, 30, 31);
+			tbSearch.BorderStyle = BorderStyle.FixedSingle;
+			tbSearch.ForeColor = Color.FromArgb(208, 203, 148);
+			tbSearch.Location = new Point(13, 12);
+			tbSearch.Margin = new Padding(4, 3, 4, 3);
+			tbSearch.Name = "tbSearch";
+			tbSearch.Size = new Size(598, 23);
+			tbSearch.TabIndex = 1026;
+			tbSearch.TextChanged += tbSearch_TextChanged;
+			tbSearch.KeyDown += tbSearch_KeyDown;
 			// 
 			// MainList
 			// 
-			this.MainList.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.MainList.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.MainList.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-			this.MainList.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.MainList.FormattingEnabled = true;
-			this.MainList.Location = new System.Drawing.Point(12, 44);
-			this.MainList.Name = "MainList";
-			this.MainList.Size = new System.Drawing.Size(359, 405);
-			this.MainList.TabIndex = 1027;
-			this.MainList.SelectedIndexChanged += new System.EventHandler(this.MainList_SelectedIndexChanged);
+			MainList.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+			MainList.BackColor = Color.FromArgb(28, 30, 31);
+			MainList.BorderStyle = BorderStyle.FixedSingle;
+			MainList.ForeColor = Color.FromArgb(208, 203, 148);
+			MainList.FormattingEnabled = true;
+			MainList.Location = new Point(13, 41);
+			MainList.Margin = new Padding(4, 3, 4, 3);
+			MainList.Name = "MainList";
+			MainList.Size = new Size(598, 272);
+			MainList.TabIndex = 1027;
+			MainList.SelectedIndexChanged += MainList_SelectedIndexChanged;
 			// 
 			// StringPicker
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.ClientSize = new System.Drawing.Size(384, 500);
-			this.Controls.Add(this.MainList);
-			this.Controls.Add(this.tbSearch);
-			this.Controls.Add(this.btnRemoveString);
-			this.Icon = global::LastChaos_ToolBox_2024.Properties.Resources.NG;
-			this.MinimizeBox = false;
-			this.Name = "StringPicker";
-			this.ShowInTaskbar = false;
-			this.Text = "String Picker";
-			this.Load += new System.EventHandler(this.StringPicker_LoadAsync);
-			this.ResumeLayout(false);
-			this.PerformLayout();
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			BackColor = Color.FromArgb(40, 40, 40);
+			ClientSize = new Size(624, 361);
+			Controls.Add(MainList);
+			Controls.Add(tbSearch);
+			Controls.Add(btnRemoveString);
+			Icon = Properties.Resources.NG;
+			Margin = new Padding(4, 3, 4, 3);
+			MinimizeBox = false;
+			MinimumSize = new Size(640, 400);
+			Name = "StringPicker";
+			ShowInTaskbar = false;
+			Text = "String Picker";
+			Load += StringPicker_LoadAsync;
+			ResumeLayout(false);
+			PerformLayout();
 
 		}
 		#endregion

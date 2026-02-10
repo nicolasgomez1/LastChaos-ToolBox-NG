@@ -1,133 +1,66 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
-	 *	Int array with default Skill ID and Level to select<Skill data Array>
+	 *	Object Array<Actual Skill ID, Actual Skill Level>
 	 *	Boolean<Enable/Disable "Remove Skill" Button>
 	 * Returns:
-	 *		Array<Int<Skill ID>, String<Skill Level>, String<Skill Name>, String<Skill Description>>
+	 *	Object Array<Skill ID, Skill Level, Skill Name, Skill Description, Texture File, Texture Row, Texture Col, Skill Levels List>
 	// Call and receive implementation
-	SkillPicker pSkillSelector = new SkillPicker(pMain, this, new object[] { Convert.ToInt32(pTempRow[strIDColumn]), pTempRow[strLevelColumn].ToString() });
-
+	SkillPicker pSkillSelector = new(pMain, this, new object[] { 0, 1 }, true);
 	if (pSkillSelector.ShowDialog() != DialogResult.OK)
 		return;
 
-	int nSkillNeededID = Convert.ToInt32(pSkillSelector.ReturnValues[0]);
-	string strSkillLevelNeeded = pSkillSelector.ReturnValues[1].ToString();
+	int nSkillID = Convert.ToInt32(pSkillSelector.ReturnValues[0]);
+	string strSkillLevel = pSkillSelector.ReturnValues[1].ToString();
+	string strSkillName = pSkillSelector.ReturnValues[2].ToString();
+	string strSkillDescription = pSkillSelector.ReturnValues[3].ToString();
+	string strSkillTextureID = pSkillSelector.ReturnValues[4].ToString();
+	int nSkillTextureRow = Convert.ToInt32(pSkillSelector.ReturnValues[5]);
+	int nSkillTextureCol = Convert.ToInt32(pSkillSelector.ReturnValues[6]);
+	string[] strLevels = pSkillSelector.ReturnValues[7].ToString().Split(',');
 	/****************************************/
 	public partial class SkillPicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private int nSearchPosition = 0;
-		public object[] ReturnValues = new object[4];
+		public object[] ReturnValues = new object[8];
 
-		public class ListBoxItem
-		{
-			public int ID { get; set; }
-			public string Text { get; set; }
-			public override string ToString() { return Text; }
-		}
 		public SkillPicker(Main mainForm, Form ParentForm, object[] objArray, bool bRemoveSkillEnable = true)
 		{
 			InitializeComponent();
 
 			pMain = mainForm;
 			pParentForm = ParentForm;
-			ReturnValues = objArray;
-			Array.Resize(ref ReturnValues, 4);
-			ReturnValues[2] = "";
-			ReturnValues[3] = "";
+			ReturnValues[0] = objArray[0];
+			ReturnValues[1] = objArray[1];
 
 			btnRemoveSkill.Enabled = bRemoveSkillEnable;
 		}
 
 		private async void SkillPicker_LoadAsync(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
-			bool bRequestNeeded = false;
+			await Task.WhenAll(
+				pMain.GenericLoadSkillDataAsync(),
+				pMain.GenericLoadSkillLevelDataAsync()
+			);
 
-			List<string> listQueryCompose = new List<string> {
-				"a_name_" + pMain.pSettings.WorkLocale, "a_client_description_" + pMain.pSettings.WorkLocale, "a_client_icon_texid", "a_client_icon_row", "a_client_icon_col"
-			};
-
-			if (pMain.pSkillTable == null)
+			if (pMain.pTables.SkillTable != null)
 			{
-				bRequestNeeded = true;
-			}
-			else
-			{
-				foreach (var column in listQueryCompose.ToList())
-				{
-					if (!pMain.pSkillTable.Columns.Contains(column))
-						bRequestNeeded = true;
-					else
-						listQueryCompose.Remove(column);
-				}
-			}
-
-			if (bRequestNeeded)
-			{
-				pMain.pSkillTable = await Task.Run(() =>
-				{
-					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_skill ORDER BY a_index;");
-				});
-
-				bRequestNeeded = false;
-				listQueryCompose.Clear();
-
-				listQueryCompose = new List<string> { "a_level", "a_dummypower" };
-
-				if (pMain.pSkillLevelTable == null)
-				{
-					bRequestNeeded = true;
-				}
-				else
-				{
-					foreach (var column in listQueryCompose.ToList())
-					{
-						if (!pMain.pSkillLevelTable.Columns.Contains(column))
-							bRequestNeeded = true;
-						else
-							listQueryCompose.Remove(column);
-					}
-				}
-
-				if (bRequestNeeded)
-				{
-					pMain.pSkillLevelTable = await Task.Run(() =>
-					{
-						return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_skilllevel ORDER BY a_level");
-					});
-				}
-			}
-
-			listQueryCompose = null;
-
-			if (pMain.pSkillTable != null && pMain.pSkillLevelTable != null)
-			{
-				MainList.Items.Clear();
-
 				MainList.BeginUpdate();
 
-				foreach (DataRow pRow in pMain.pSkillTable.Rows)
+				foreach (DataRow pRow in pMain.pTables.SkillTable.Rows)
 				{
 					int nSkillID = Convert.ToInt32(pRow["a_index"]);
 
-					MainList.Items.Add(new ListBoxItem
+					MainList.Items.Add(new Main.ListBoxItem
 					{
 						ID = nSkillID,
-						Text = pRow["a_index"] + " - " + pRow["a_name_" + pMain.pSettings.WorkLocale].ToString()
+						Text = pRow["a_index"] + " - " + pRow["a_name_" + pMain.pSettings.WorkLocale]
 					});
 
 					if (nSkillID == Convert.ToInt32(ReturnValues[0]))
@@ -138,113 +71,70 @@ namespace LastChaos_ToolBox_2024
 					MainList.SelectedIndex = 0;
 
 				MainList.EndUpdate();
+
+				ReturnValues[0] = -1;
 			}
 		}
 
-		private void tbSearch_KeyDown(object sender, KeyEventArgs e)
+		private void tbSearch_KeyDown(object sender, KeyEventArgs e) { nSearchPosition = pMain.SearchInListBox(tbSearch, e, MainList, nSearchPosition); }
+
+		private void MainList_SelectedIndexChanged(object? sender, EventArgs e)
 		{
-			if (e.KeyCode == Keys.Enter)
+			if (MainList.SelectedItem is not Main.ListBoxItem pSelectedItem)
+				return;
+
+			cbLevelSelector.Enabled = false;
+			btnSelect.Enabled = false;
+
+			cbLevelSelector.Items.Clear();
+			cbLevelSelector.BeginUpdate();
+
+			int nItemID = pSelectedItem.ID;
+
+			DataRow pRowSkill = pMain.pTables.SkillTable?.Select("a_index=" + nItemID).FirstOrDefault();
+
+			Image pIcon = pMain.GetIcon("SkillBtn", pRowSkill["a_client_icon_texid"].ToString(), Convert.ToInt32(pRowSkill["a_client_icon_row"]), Convert.ToInt32(pRowSkill["a_client_icon_col"]));
+			if (pIcon != null)
+				pbIcon.Image = pIcon;
+
+			string strSkillDescription = pRowSkill["a_client_description_" + pMain.pSettings.WorkLocale].ToString() ?? string.Empty;
+
+			tbDescription.Text = strSkillDescription;
+
+			ReturnValues[2] = pRowSkill["a_name_" + pMain.pSettings.WorkLocale];
+			ReturnValues[3] = strSkillDescription;
+			ReturnValues[4] = pRowSkill["a_client_icon_texid"];
+			ReturnValues[5] = pRowSkill["a_client_icon_row"];
+			ReturnValues[6] = pRowSkill["a_client_icon_col"];
+
+			DataRow[] pSkillLevelRows = pMain.pTables.SkillLevelTable?.AsEnumerable().Where(row => Convert.ToInt32(row["a_index"]) == nItemID).ToArray();
+
+			foreach (var RowSkillLevel in pSkillLevelRows)
 			{
-				void Search()
-				{
-					string strStringToSearch = tbSearch.Text;
+				string strSkillLevel = RowSkillLevel["a_level"].ToString() ?? "0";
 
-					for (int i = 0; i < MainList.Items.Count; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1 && i > nSearchPosition)
-						{
-							MainList.SetSelected(i, true);
+				cbLevelSelector.Items.Add($"Level: {strSkillLevel} - Power: " + RowSkillLevel["a_dummypower"]);
 
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-
-					for (int i = 0; i <= nSearchPosition; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-				}
-
-				int nSelected = MainList.SelectedIndex;
-
-				if (nSelected != -1)
-				{
-					if (nSelected < nSearchPosition)
-						nSearchPosition = nSelected;
-
-					Search();
-				}
-
-				e.Handled = true;
-				e.SuppressKeyPress = true;
+				if (ReturnValues[1].ToString() == strSkillLevel)
+					cbLevelSelector.SelectedIndex = cbLevelSelector.Items.Count - 1;
 			}
-		}
 
-		private void MainList_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+			ReturnValues[7] = string.Join(",", pSkillLevelRows.Select(row => { string level = row["a_level"]?.ToString(); string power = row["a_dummypower"]?.ToString(); return $"Level: {level} - Power: {power}"; }));
 
-			if (pSelectedItem != null)
-			{
-				cbLevelSelector.Enabled = false;
-				btnSelect.Enabled = false;
+			if (cbLevelSelector.SelectedIndex == -1)
+				cbLevelSelector.SelectedIndex = 0;
 
-				cbLevelSelector.Items.Clear();
+			cbLevelSelector.EndUpdate();
 
-				cbLevelSelector.BeginUpdate();
+			cbLevelSelector.Enabled = true;
+			btnSelect.Enabled = true;
 
-				int nItemID = pSelectedItem.ID;
-
-				DataRow pRowSkill = pMain.pSkillTable.Select("a_index = " + nItemID).FirstOrDefault();
-
-				Image pIcon = pMain.GetIcon("SkillBtn", pRowSkill["a_client_icon_texid"].ToString(), Convert.ToInt32(pRowSkill["a_client_icon_row"]), Convert.ToInt32(pRowSkill["a_client_icon_col"]));
-				if (pIcon != null)
-					pbIcon.Image = pIcon;
-
-				string strSkillDescription = pRowSkill["a_client_description_" + pMain.pSettings.WorkLocale].ToString();
-
-				tbDescription.Text = strSkillDescription;
-
-				ReturnValues[2] = pRowSkill["a_name_" + pMain.pSettings.WorkLocale].ToString();
-				ReturnValues[3] = strSkillDescription;
-
-				List<DataRow> listSkillLevels = pMain.pSkillLevelTable.AsEnumerable().Where(row => row.RowState != DataRowState.Deleted && row.Field<int>("a_index") == nItemID).ToList();
-
-				foreach (var pRowSkillLevel in listSkillLevels)
-				{
-					string strSkillLevel = pRowSkillLevel["a_level"].ToString();
-
-					cbLevelSelector.Items.Add("Level: " + strSkillLevel + " - Power: " + pRowSkillLevel["a_dummypower"].ToString());
-
-					if (ReturnValues[1].ToString() == strSkillLevel)
-						cbLevelSelector.SelectedIndex = cbLevelSelector.Items.Count - 1;
-				}
-
-				pRowSkill = null;
-				listSkillLevels = null;
-
-				if (cbLevelSelector.SelectedIndex == -1)
-					cbLevelSelector.SelectedIndex = 0;
-
-				cbLevelSelector.EndUpdate();
-
-				cbLevelSelector.Enabled = true;
-				btnSelect.Enabled = true;
-			}
+			ReturnValues[1] = "";
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
 		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+			Main.ListBoxItem? pSelectedItem = (Main.ListBoxItem?)MainList.SelectedItem;
 			int nSelectedSkillLevel = cbLevelSelector.SelectedIndex;
 
 			if (pSelectedItem != null && nSelectedSkillLevel != -1)
@@ -252,7 +142,7 @@ namespace LastChaos_ToolBox_2024
 				DialogResult = DialogResult.OK;
 
 				ReturnValues[0] = pSelectedItem.ID;
-				ReturnValues[1] = (nSelectedSkillLevel + 1).ToString();
+				ReturnValues[1] = nSelectedSkillLevel + 1;
 
 				Close();
 			}
@@ -262,7 +152,7 @@ namespace LastChaos_ToolBox_2024
 		{
 			DialogResult = DialogResult.OK;
 
-			ReturnValues = new object[] { -1, "0", "", "" };
+			ReturnValues = new object[] { -1, 0, "", "", "", "", "", new string[] { } };
 
 			Close();
 		}

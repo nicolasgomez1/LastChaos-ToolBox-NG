@@ -1,0 +1,139 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <RootNamespace>LastChaos_ToolBoxNG</RootNamespace>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyVersion>2.0.0.10077</AssemblyVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ApplicationIcon>Resources\NG.ico</ApplicationIcon>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+    <FileVersion>2.0.0.0</FileVersion>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;NU1701;WFO5001;MSB3270;8600;8601;8602;8604;8618</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NoWarn>1701;1702;NU1701;WFO5001;MSB3270;8600;8601;8602;8604;8618</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <NoWarn>1701;1702;NU1701;WFO5001;MSB3270;8600;8601;8602;8604;8618</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <NoWarn>1701;1702;NU1701;WFO5001;MSB3270;8600;8601;8602;8604;8618</NoWarn>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="_redist\**" />
+    <EmbeddedResource Remove="_redist\**" />
+    <None Remove="_redist\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="EXTENSIONS &amp; NUGETS.txt" />
+    <None Remove="MessageBox_ComboBox.resx~RF1498721.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\NG.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Crc32.NET" Version="1.2.0" />
+    <PackageReference Include="FluentFTP" Version="53.0.2" />
+    <PackageReference Include="INIFileParserDotNetCore" Version="2.5.2" />
+    <PackageReference Include="MySqlConnector" Version="2.5.0" />
+    <PackageReference Include="SlimDX" Version="4.0.13.44" />
+    <PackageReference Include="System.Data.Common" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Editors\ItemSetEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Editors\PackageItemEventEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Editors\TitleEditor.cs" />
+    <Compile Update="Pickers\TitlePicker.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="README.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\Put your Resources.png Files here">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Settings.ini.dummy">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="SlimDX.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Force.Crc32" />
+    <Using Include="IniParser" />
+    <Using Include="IniParser.Model" />
+    <Using Include="IniParser.Model.Configuration" />
+    <Using Include="IniParser.Parser" />
+    <Using Include="MySqlConnector" />
+    <Using Include="System.ComponentModel" />
+    <Using Include="System.Data" />
+    <Using Include="System.Diagnostics" />
+    <Using Include="System.Drawing.Imaging" />
+    <Using Include="System.Globalization" />
+    <Using Include="System.IO.Compression" />
+    <Using Include="System.Net" />
+    <Using Include="System.Reflection" />
+    <Using Include="System.Runtime.InteropServices" />
+    <Using Include="System.Security.Cryptography" />
+    <Using Include="System.Text" />
+    <Using Include="System.Text.Json" />
+    <Using Include="System.Text.RegularExpressions" />
+    <Using Include="System.Windows.Forms.MethodInvoker">
+      <Alias>MethodInvoker</Alias>
+    </Using>
+    <Using Include="System.Windows.Forms.Timer">
+      <Alias>Timer</Alias>
+    </Using>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,10 @@
+Extensions:
+	Automatic Version 3
+
+Nuget:
+	INIParser (Kim Christensen)
+	System.Data.Common (Microsoft)
+	MySQLConnector (Bradley Grainger)
+	SlimDX (SlimDX Group)
+	Crc32.NET (force)
+	FluentFTP (Robin Rodrick, FluentFTP Contributors)

@@ -1,59 +1,43 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Definitions;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
-	 *	Int <Actual Option ID>
+	 *	Int Array<Actual Option ID, Actual Option Level>
 	 * Returns:
-	 *		Int Array<Option Type, Option Level>
+	 *	Object Array<Option Type, Option Level, Option Name, Option Levels List>
 	// Call and receive implementation
-	OptionPicker pOptionSelector = new OptionPicker(pMain, this, new int[] { 0, 1 });
-
+	OptionPicker pOptionSelector = new(pMain, this, new int[] { 0, 1 });
 	if (pOptionSelector.ShowDialog() != DialogResult.OK)
 		return;
 
 	int nOptionType = pOptionSelector.ReturnValues[0];
 	int nOptionLevel = pOptionSelector.ReturnValues[1];
+	string strOptionName = pOptionSelector.ReturnValues[2].ToString();
+	string[] strLevels = pOptionSelector.ReturnValues[3].ToString().Split(',');
 	/****************************************/
 	public partial class OptionPicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private int nSearchPosition = 0;
-		private DataRow pRowOption;
-		private string[] strArrayLevel;
-		public int[] ReturnValues = { -1, 0 };
-
-		public class ListBoxItem
-		{
-			public int ID { get; set; }
-			public string Text { get; set; }
-			public override string ToString() { return Text; }
-		}
+		private DataRow? pRowOption;
+		private string[]? strValues;
+		public object[] ReturnValues = { -1, 0, "", new string[] { "" } };
 
 		public OptionPicker(Main mainForm, Form ParentForm, int[] nArray)
 		{
 			InitializeComponent();
 
-			this.FormClosing += OptionPicker_FormClosing;
-
 			pMain = mainForm;
 			pParentForm = ParentForm;
-			ReturnValues = nArray;
+			ReturnValues[0] = nArray[0];
+			ReturnValues[1] = nArray[1];
 		}
 
-		private void OptionPicker_FormClosing(object sender, FormClosingEventArgs e) { pRowOption = null; }
+		private void Picker_FormClosing(object sender, FormClosingEventArgs e) { pRowOption = null; }
 
-		public void AddInfo(string strText, bool bHead = false)
+		private void AddInfo(string strText, bool bHead = false)
 		{
 			rtbInformation.BeginInvoke((MethodInvoker)delegate
 			{
@@ -71,15 +55,20 @@ namespace LastChaos_ToolBox_2024
 
 		private async void OptionPicker_LoadAsync(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
 			bool bRequestNeeded = false;
-
 			List<string> listQueryCompose = new List<string> {
-				"a_type", "a_level", "a_prob", "a_weapon_type", "a_wear_type", "a_accessory_type", "a_name_" + pMain.pSettings.WorkLocale
+				"a_type",
+				"a_level",
+				"a_prob",
+				"a_weapon_type",
+				"a_wear_type",
+				"a_accessory_type",
+				"a_name_" + pMain.pSettings.WorkLocale
 			};
 
-			if (pMain.pOptionTable == null)
+			if (pMain.pTables.OptionTable == null)
 			{
 				bRequestNeeded = true;
 			}
@@ -87,7 +76,7 @@ namespace LastChaos_ToolBox_2024
 			{
 				foreach (var column in listQueryCompose.ToList())
 				{
-					if (!pMain.pOptionTable.Columns.Contains(column))
+					if (!pMain.pTables.OptionTable.Columns.Contains(column))
 						bRequestNeeded = true;
 					else
 						listQueryCompose.Remove(column);
@@ -96,31 +85,32 @@ namespace LastChaos_ToolBox_2024
 
 			if (bRequestNeeded)
 			{
-				pMain.pOptionTable = await Task.Run(() =>
+				DataTable? pNewTable = await Task.Run(() =>
 				{
-					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_option ORDER BY a_index;");
+					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(", ", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_option ORDER BY a_index;");
 				});
+
+				if (pMain.pTables.OptionTable == null)
+					pMain.pTables.OptionTable = pNewTable;
+				else
+					pMain.MergeDataTables(pNewTable, "a_index", ref pMain.pTables.OptionTable);
 			}
 
-			listQueryCompose = null;
-
-			if (pMain.pOptionTable != null)
+			if (pMain.pTables.OptionTable != null)
 			{
-				MainList.Items.Clear();
-
 				MainList.BeginUpdate();
 
-				foreach (DataRow pRow in pMain.pOptionTable.Rows)
+				foreach (DataRow pRow in pMain.pTables.OptionTable.Rows)
 				{
 					int nItemID = Convert.ToInt32(pRow["a_index"]);
 
-					MainList.Items.Add(new ListBoxItem
+					MainList.Items.Add(new Main.ListBoxItem
 					{
 						ID = nItemID,
-						Text = pRow["a_type"] + " - " + pRow["a_name_" + pMain.pSettings.WorkLocale].ToString()
+						Text = $"{pRow["a_type"]} - {pRow["a_name_" + pMain.pSettings.WorkLocale]}"
 					});
 
-					if (nItemID == ReturnValues[0])
+					if (Convert.ToInt32(pRow["a_type"]) == Convert.ToInt32(ReturnValues[0]))
 						MainList.SelectedIndex = MainList.Items.Count - 1;
 				}
 
@@ -128,191 +118,128 @@ namespace LastChaos_ToolBox_2024
 					MainList.SelectedIndex = 0;
 
 				MainList.EndUpdate();
+
+				ReturnValues[0] = -1;
 			}
 		}
 
-		private void tbSearch_KeyDown(object sender, KeyEventArgs e)
+		private void tbSearch_KeyDown(object sender, KeyEventArgs e) { nSearchPosition = pMain.SearchInListBox(tbSearch, e, MainList, nSearchPosition); }
+
+		private void MainList_SelectedIndexChanged(object? sender, EventArgs e)
 		{
-			if (e.KeyCode == Keys.Enter)
+			if (MainList.SelectedItem is not Main.ListBoxItem pSelectedItem)
+				return;
+
+			rtbInformation.Clear();
+
+			cbLevelSelector.Items.Clear();
+			cbLevelSelector.Enabled = false;
+
+			btnSelect.Enabled = false;
+
+			int nItemID = pSelectedItem.ID;
+
+			pRowOption = pMain.pTables.OptionTable?.Select("a_index=" + nItemID).FirstOrDefault();
+
+			AddInfo("Type:", true);
+
+			AddInfo(Defs.OptionTypes[Convert.ToInt32(pRowOption["a_type"])]);
+
+			AddInfo("Weapon Types:", true);
+			// NOTE: I'm not sure of all this >>
+			int i, nFlag = Convert.ToInt32(pRowOption["a_weapon_type"]);
+
+			if (nFlag != 0)
 			{
-				void Search()
+				i = 0;
+				foreach (string strSubType in Defs.ItemTypesNSubTypes["Weapon"])
 				{
-					string strStringToSearch = tbSearch.Text;
+					if ((nFlag & 1L << i) != 0)
+						AddInfo(strSubType);
 
-					for (int i = 0; i < MainList.Items.Count; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1 && i > nSearchPosition)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-
-					for (int i = 0; i <= nSearchPosition; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
+					i++;
 				}
-
-				int nSelected = MainList.SelectedIndex;
-
-				if (nSelected != -1)
-				{
-					if (nSelected < nSearchPosition)
-						nSearchPosition = nSelected;
-
-					Search();
-				}
-
-				e.Handled = true;
-				e.SuppressKeyPress = true;
 			}
-		}
-
-		private void MainList_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
-
-			if (pSelectedItem != null)
+			else
 			{
-				rtbInformation.Clear();
-
-				cbLevelSelector.Items.Clear();
-				cbLevelSelector.Enabled = false;
-
-				btnSelect.Enabled = false;
-
-				int nItemID = pSelectedItem.ID;
-
-				pRowOption = pMain.pOptionTable.Select("a_index = " + nItemID).FirstOrDefault();
-
-				AddInfo("Type:", true);
-
-				AddInfo(Defs.OptionTypes[Convert.ToInt32(pRowOption["a_type"])]);
-
-				AddInfo("Weapon Types:", true);
-
-				// NOTE: I'm not sure of all this >>
-				int nFlag = Convert.ToInt32(pRowOption["a_weapon_type"]);
-
-				if (nFlag != 0)
-				{
-					int i = 0;
-					foreach (string strSubType in Defs.ItemTypesNSubTypes["Weapon"])
-					{
-						if ((nFlag & 1L << i) != 0)
-							AddInfo(strSubType);
-
-						i++;
-					}
-				}
-				else
-				{
-					AddInfo("0");
-				}
-
-				AddInfo("Wear Types:", true);
-
-				nFlag = Convert.ToInt32(pRowOption["a_wear_type"]);
-
-				if (nFlag != 0)
-				{
-					int i = 0;
-					foreach (string strSubType in Defs.ItemTypesNSubTypes["Armor"])
-					{
-						if ((nFlag & 1L << i) != 0)
-							AddInfo(strSubType);
-
-						i++;
-					}
-				}
-				else
-				{
-					AddInfo("0");
-				}
-
-				AddInfo("Accesory Types:", true);
-
-				nFlag = Convert.ToInt32(pRowOption["a_accessory_type"]);
-
-				if (nFlag != 0)
-				{
-					int i = 0;
-					foreach (string strSubType in Defs.ItemTypesNSubTypes["Accesory"])
-					{
-						if ((nFlag & 1L << i) != 0)
-							AddInfo(strSubType);
-
-						i++;
-					}
-				}
-				else
-				{
-					AddInfo("0");
-				}
-				// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-
-				{
-					string strLevel = pRowOption["a_level"].ToString();
-					if (strLevel.IndexOf(' ') >= 0)
-					{
-						pMain.Logger("Option Picker > Option: " + nItemID + " Error: have extra blank space in a_level.", Color.Red);
-
-						strLevel = strLevel.TrimStart();
-					}
-
-					strArrayLevel = strLevel.Split(' ');
-
-					string strProb = pRowOption["a_prob"].ToString();
-					if (strProb.IndexOf(' ') >= 0)
-					{
-						pMain.Logger("Option Picker > Option: " + nItemID + " Error: have extra blank space in a_prob.", Color.Red);
-
-						strProb = strProb.TrimStart();
-					}
-
-					string[] strArrayProb = strProb.Split(' ');
-
-					int i = 0;
-					foreach (string strLevelB in strArrayLevel)
-					{
-						if (i < strArrayProb.Length)
-						{
-							cbLevelSelector.Items.Add("[" + (i + 1) + "] Lvl: " + strLevelB + " Prob: " + strArrayProb[i]);
-
-							if (Convert.ToInt32(strLevelB) == ReturnValues[1])
-								cbLevelSelector.SelectedIndex = cbLevelSelector.Items.Count - 1;
-						}
-						else
-						{
-							pMain.Logger("Option Picker > Option: " + nItemID + " Error: a_prob mismatched with a_level.", Color.Red);
-						}
-
-						i++;
-					}
-
-					if (cbLevelSelector.SelectedIndex == -1)
-						cbLevelSelector.SelectedIndex = 0;
-				}
-
-				cbLevelSelector.Enabled = true;
-				btnSelect.Enabled = true;
+				AddInfo("0");
 			}
+
+			AddInfo("Wear Types:", true);
+
+			nFlag = Convert.ToInt32(pRowOption["a_wear_type"]);
+			if (nFlag != 0)
+			{
+				i = 0;
+				foreach (string strSubType in Defs.ItemTypesNSubTypes["Armor"])
+				{
+					if ((nFlag & 1L << i) != 0)
+						AddInfo(strSubType);
+
+					i++;
+				}
+			}
+			else
+			{
+				AddInfo("0");
+			}
+
+			AddInfo("Accesory Types:", true);
+
+			nFlag = Convert.ToInt32(pRowOption["a_accessory_type"]);
+			if (nFlag != 0)
+			{
+				i = 0;
+				foreach (string strSubType in Defs.ItemTypesNSubTypes["Accesory"])
+				{
+					if ((nFlag & 1L << i) != 0)
+						AddInfo(strSubType);
+
+					i++;
+				}
+			}
+			else
+			{
+				AddInfo("0");
+			}
+			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+			strValues = pRowOption["a_level"].ToString().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+			string[] strProbs = pRowOption["a_prob"].ToString().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+			ReturnValues[2] = pRowOption["a_name_" + pMain.pSettings.WorkLocale];
+			ReturnValues[3] = string.Join(",", strValues.Select((level, index) => index < strProbs.Length ? $"{index + 1} - Value: {level} Prob: {strProbs[index]}" : null).Where(x => x != null));
+
+			i = 0;
+			foreach (string strValue in strValues)
+			{
+				if (i < strProbs.Length)
+				{
+					cbLevelSelector.Items.Add($"{(i + 1)} - Value: {strValue} Prob: {strProbs[i]}");
+
+					if ((i + 1) == Convert.ToInt32(ReturnValues[1]))
+						cbLevelSelector.SelectedIndex = cbLevelSelector.Items.Count - 1;
+				}
+				else
+				{
+					pMain.Logger(LogTypes.Error, $"Option Picker > Option: {nItemID} Error: a_prob mismatched with a_level.");
+				}
+
+				i++;
+			}
+
+			if (cbLevelSelector.SelectedIndex == -1)
+				cbLevelSelector.SelectedIndex = 0;
+
+			cbLevelSelector.Enabled = true;
+			btnSelect.Enabled = true;
+
+			ReturnValues[1] = 0;
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
 		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+			Main.ListBoxItem? pSelectedItem = (Main.ListBoxItem?)MainList.SelectedItem;
 			int nSelectedOptionLevel = cbLevelSelector.SelectedIndex;
 
 			if (pSelectedItem != null && nSelectedOptionLevel != -1)
@@ -320,18 +247,17 @@ namespace LastChaos_ToolBox_2024
 				DialogResult = DialogResult.OK;
 
 				ReturnValues[0] = Convert.ToInt32(pRowOption["a_type"]);
-				ReturnValues[1] = Convert.ToInt32(strArrayLevel[nSelectedOptionLevel]);
+				ReturnValues[1] = nSelectedOptionLevel + 1;
 
 				Close();
 			}
 		}
 
-		private void btnRemoveOption_Click(object sender, EventArgs e)
+		private void btnRemove_Click(object sender, EventArgs e)
 		{
 			DialogResult = DialogResult.OK;
 
-			ReturnValues[0] = -1;
-			ReturnValues[1] = 0;
+			ReturnValues = new object[] { -1, 0, "NONE", new string[] { } };
 
 			Close();
 		}

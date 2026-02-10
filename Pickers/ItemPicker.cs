@@ -1,101 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
-	 *	Int <Actual Item ID>
+	 *	Int<Actual Item ID>
+	 *	Bool<Enable Remove Item Button> (Default: true)
 	 * Returns:
-	 *		Int<Item ID>
+	 *	Object Array<Item ID, Item Name, Item Description, Texture ID, Texture Row, Texture Col>
 	// Call and receive implementation
-	ItemPicker pItemSelector = new ItemPicker(pMain, this, 19);
-
+	ItemPicker pItemSelector = new(pMain, this, 19, false);
 	if (pItemSelector.ShowDialog() != DialogResult.OK)
 		return;
 
-	int nItemID = pItemSelector.ReturnValues;
+	int nItemID = Convert.ToInt32(pItemSelector.ReturnValues[0]);
+	string strItemName = pItemSelector.ReturnValues[1].ToString();
+	string strItemDescription = pItemSelector.ReturnValues[2].ToString();
+	string strItemTextureID = pItemSelector.ReturnValues[3].ToString();
+	int nItemTextureRow = Convert.ToInt32(pItemSelector.ReturnValues[4]);
+	int nItemTextureCol = Convert.ToInt32(pItemSelector.ReturnValues[5]);
 	/****************************************/
 	public partial class ItemPicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private int nSearchPosition = 0;
-		public int ReturnValues = -1;
+		public object[] ReturnValues = new object[6];
 
-		public class ListBoxItem
-		{
-			public int ID { get; set; }
-			public string Text { get; set; }
-			public override string ToString() { return Text; }
-		}
-
-		public ItemPicker(Main mainForm, Form ParentForm, int iActualItemID)
+		public ItemPicker(Main mainForm, Form ParentForm, int nActualItem, bool bAllowRemove = true)
 		{
 			InitializeComponent();
 
 			pMain = mainForm;
 			pParentForm = ParentForm;
-			ReturnValues = iActualItemID;
+			ReturnValues[0] = nActualItem;
+
+			btnRemoveItem.Enabled = bAllowRemove;
+		}
+
+		private void AddInfo(string strText, bool bHead = false)
+		{
+			rtbInformation.BeginInvoke((MethodInvoker)delegate
+			{
+				int nStartPos = rtbInformation.TextLength;
+				rtbInformation.AppendText(strText.ToString() + Environment.NewLine);
+				int nEndPos = rtbInformation.TextLength;
+
+				rtbInformation.Select(nStartPos, nEndPos - nStartPos);
+				rtbInformation.SelectionColor = bHead ? Color.FromArgb(100, 100, 100) : Color.FromArgb(208, 203, 148);
+				rtbInformation.SelectionLength = 0;
+
+				rtbInformation.ScrollToCaret();
+			});
 		}
 
 		private async void ItemPicker_LoadAsync(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
-			bool bRequestNeeded = false;
-			List<string> listQueryCompose = new List<string> {
-				"a_texture_id", "a_texture_row", "a_texture_col", "a_name_" + pMain.pSettings.WorkLocale, "a_descr_" + pMain.pSettings.WorkLocale
-			};
+			await pMain.GenericLoadItemDataAsync();
 
-			if (pMain.pItemTable == null)
+			if (pMain.pTables.ItemTable != null)
 			{
-				bRequestNeeded = true;
-			}
-			else
-			{
-				foreach (var column in listQueryCompose.ToList())
-				{
-					if (!pMain.pItemTable.Columns.Contains(column))
-						bRequestNeeded = true;
-					else
-						listQueryCompose.Remove(column);
-				}
-			}
-
-			if (bRequestNeeded)
-			{
-				pMain.pItemTable = await Task.Run(() =>
-				{
-					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_item ORDER BY a_index;");
-				});
-			}
-
-			listQueryCompose = null;
-
-			if (pMain.pItemTable != null)
-			{
-				MainList.Items.Clear();
-
 				MainList.BeginUpdate();
 
-				foreach (DataRow pRow in pMain.pItemTable.Rows)
+				foreach (DataRow pRow in pMain.pTables.ItemTable.Rows)
 				{
 					int nItemID = Convert.ToInt32(pRow["a_index"]);
 
-					MainList.Items.Add(new ListBoxItem
+					MainList.Items.Add(new Main.ListBoxItem
 					{
 						ID = nItemID,
-						Text = pRow["a_index"] + " - " + pRow["a_name_" + pMain.pSettings.WorkLocale].ToString()
+						Text = pRow["a_index"] + " - " + pRow["a_name_" + pMain.pSettings.WorkLocale]
 					});
 
-					if (nItemID == ReturnValues)
+					if (nItemID == Convert.ToInt32(ReturnValues[0]))
 						MainList.SelectedIndex = MainList.Items.Count - 1;
 				}
 
@@ -103,90 +81,57 @@ namespace LastChaos_ToolBox_2024
 					MainList.SelectedIndex = 0;
 
 				MainList.EndUpdate();
+
+				ReturnValues[0] = -1;
 			}
 		}
 
-		private void tbSearch_KeyDown(object sender, KeyEventArgs e)
+		private void tbSearch_KeyDown(object sender, KeyEventArgs e) { nSearchPosition = pMain.SearchInListBox(tbSearch, e, MainList, nSearchPosition); }
+
+		private void MainList_SelectedIndexChanged(object? sender, EventArgs e)
 		{
-			if (e.KeyCode == Keys.Enter)
-			{
-				void Search()
-				{
-					string strStringToSearch = tbSearch.Text;
+			if (MainList.SelectedItem is not Main.ListBoxItem pSelectedItem)
+				return;
 
-					for (int i = 0; i < MainList.Items.Count; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1 && i > nSearchPosition)
-						{
-							MainList.SetSelected(i, true);
+			rtbInformation.Clear();
 
-							nSearchPosition = i;
+			btnSelect.Enabled = false;
 
-							return;
-						}
-					}
+			int nItemID = pSelectedItem.ID;
+			DataRow? pRowItem = pMain.pTables.ItemTable?.Select("a_index=" + nItemID).FirstOrDefault();
 
-					for (int i = 0; i <= nSearchPosition; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1)
-						{
-							MainList.SetSelected(i, true);
+			string strTextureID = pRowItem["a_texture_id"].ToString() ?? "0";
+			int nTextureRow = Convert.ToInt32(pRowItem["a_texture_row"]);
+			int nTextureCol = Convert.ToInt32(pRowItem["a_texture_col"]);
 
-							nSearchPosition = i;
+			Image? pIcon = pMain.GetIcon("ItemBtn", strTextureID, nTextureRow, nTextureCol);
+			if (pIcon != null)
+				pbIcon.Image = pIcon;
 
-							return;
-						}
-					}
-				}
+			AddInfo("Level:", true);
+			AddInfo(pRowItem["a_level"].ToString());
 
-				int nSelected = MainList.SelectedIndex;
+			AddInfo("Description:", true);
+			AddInfo(pRowItem["a_descr_" + pMain.pSettings.WorkLocale].ToString());
 
-				if (nSelected != -1)
-				{
-					if (nSelected < nSearchPosition)
-						nSearchPosition = nSelected;
+			ReturnValues[1] = pRowItem["a_name_" + pMain.pSettings.WorkLocale];
+			ReturnValues[2] = pRowItem["a_descr_" + pMain.pSettings.WorkLocale];
+			ReturnValues[3] = strTextureID;
+			ReturnValues[4] = nTextureRow;
+			ReturnValues[5] = nTextureCol;
 
-					Search();
-				}
-
-				e.Handled = true;
-				e.SuppressKeyPress = true;
-			}
-		}
-
-		private void MainList_SelectedIndexChanged(object sender, EventArgs e)
-		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
-
-			if (pSelectedItem != null)
-			{
-				btnSelect.Enabled = false;
-
-				int nItemID = pSelectedItem.ID;
-
-				DataRow pRowItem = pMain.pItemTable.Select("a_index = " + nItemID).FirstOrDefault();
-
-				Image pIcon = pMain.GetIcon("ItemBtn", pRowItem["a_texture_id"].ToString(), Convert.ToInt32(pRowItem["a_texture_row"]), Convert.ToInt32(pRowItem["a_texture_col"]));
-				if (pIcon != null)
-					pbIcon.Image = pIcon;
-
-				tbDescription.Text = pRowItem["a_descr_" + pMain.pSettings.WorkLocale].ToString();
-
-				pRowItem = null;
-
-				btnSelect.Enabled = true;
-			}
+			btnSelect.Enabled = true;
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
 		{
-			ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+			Main.ListBoxItem? pSelectedItem = (Main.ListBoxItem?)MainList.SelectedItem;
 
 			if (pSelectedItem != null)
 			{
 				DialogResult = DialogResult.OK;
 
-				ReturnValues = pSelectedItem.ID;
+				ReturnValues[0] = pSelectedItem.ID;
 
 				Close();
 			}
@@ -196,7 +141,7 @@ namespace LastChaos_ToolBox_2024
 		{
 			DialogResult = DialogResult.OK;
 
-			ReturnValues = -1;
+			ReturnValues = new object[] { -1, "", "", "", "", "" };
 
 			Close();
 		}

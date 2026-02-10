@@ -1,6 +1,6 @@
-﻿using LastChaos_ToolBox_2024.Properties;
+﻿using LastChaos_ToolBoxNG.Properties;
 
-namespace LastChaos_ToolBox_2024
+namespace LastChaos_ToolBoxNG
 {
     partial class Main
     {
@@ -22,151 +22,355 @@ namespace LastChaos_ToolBox_2024
             base.Dispose(disposing);
         }
 
-        #region Windows Form Designer generated code
+		#region Windows Form Designer generated code
 
-        /// <summary>
-        /// Required method for Designer support - do not modify
-        /// the contents of this method with the code editor.
-        /// </summary>
-        private void InitializeComponent()
-        {
-			this.components = new System.ComponentModel.Container();
-			this.button1 = new System.Windows.Forms.Button();
-			this.button2 = new System.Windows.Forms.Button();
-			this.button3 = new System.Windows.Forms.Button();
-			this.Monitor = new System.Windows.Forms.Timer(this.components);
-			this.groupBox1 = new System.Windows.Forms.GroupBox();
-			this.rtbConsole = new System.Windows.Forms.RichTextBox();
-			this.button4 = new System.Windows.Forms.Button();
-			this.groupBox1.SuspendLayout();
-			this.SuspendLayout();
+		/// <summary>
+		/// Required method for Designer support - do not modify
+		/// the contents of this method with the code editor.
+		/// </summary>
+		private void InitializeComponent()
+		{
+			components = new Container();
+			ComponentResourceManager resources = new ComponentResourceManager(typeof(Main));
+			btnReconnect = new Button();
+			btnReloadSettings = new Button();
+			Monitor = new Timer(components);
+			button1 = new Button();
+			btnUpdateHelper = new Button();
+			btnCompareFiles = new Button();
+			btnControlPanel = new Button();
+			btnFileEncrypter = new Button();
+			btnFileDecrypter = new Button();
+			btnExporter = new Button();
+			rtbConsole = new RichTextBox();
+			btnCheckUpdates = new Button();
+			cbDockToTop = new CheckBox();
+			lbEditors = new ListBox();
+			Status = new StatusStrip();
+			btnDBStringTranslator = new Button();
+			cbMaximizeOnStartUp = new CheckBox();
+			SuspendLayout();
 			// 
-			// button1
+			// btnReconnect
 			// 
-			this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button1.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.button1.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button1.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.button1.Location = new System.Drawing.Point(6, 19);
-			this.button1.Name = "button1";
-			this.button1.Size = new System.Drawing.Size(100, 23);
-			this.button1.TabIndex = 0;
-			this.button1.Text = "Item Editor";
-			this.button1.UseVisualStyleBackColor = false;
-			this.button1.Click += new System.EventHandler(this.ItemEditor_Click);
+			btnReconnect.BackColor = Color.FromArgb(40, 40, 40);
+			btnReconnect.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnReconnect.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnReconnect.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnReconnect.FlatStyle = FlatStyle.Flat;
+			btnReconnect.ForeColor = Color.FromArgb(208, 203, 148);
+			btnReconnect.Location = new Point(366, 12);
+			btnReconnect.Margin = new Padding(4, 3, 4, 3);
+			btnReconnect.Name = "btnReconnect";
+			btnReconnect.Size = new Size(100, 27);
+			btnReconnect.TabIndex = 0;
+			btnReconnect.Text = "Reconnect";
+			btnReconnect.UseVisualStyleBackColor = false;
+			btnReconnect.Click += btnReconnect_Click;
 			// 
-			// button2
+			// btnReloadSettings
 			// 
-			this.button2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button2.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.button2.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button2.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.button2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.button2.Location = new System.Drawing.Point(118, 12);
-			this.button2.Name = "button2";
-			this.button2.Size = new System.Drawing.Size(100, 23);
-			this.button2.TabIndex = 1;
-			this.button2.Text = "Reconnect";
-			this.button2.UseVisualStyleBackColor = false;
-			this.button2.Click += new System.EventHandler(this.Reconnect_Click);
-			// 
-			// button3
-			// 
-			this.button3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button3.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.button3.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button3.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.button3.Location = new System.Drawing.Point(12, 12);
-			this.button3.Name = "button3";
-			this.button3.Size = new System.Drawing.Size(100, 23);
-			this.button3.TabIndex = 2;
-			this.button3.Text = "Reload Settings";
-			this.button3.UseVisualStyleBackColor = false;
-			this.button3.Click += new System.EventHandler(this.ReloadSettings_Click);
+			btnReloadSettings.BackColor = Color.FromArgb(40, 40, 40);
+			btnReloadSettings.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnReloadSettings.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnReloadSettings.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnReloadSettings.FlatStyle = FlatStyle.Flat;
+			btnReloadSettings.ForeColor = Color.FromArgb(208, 203, 148);
+			btnReloadSettings.Location = new Point(258, 12);
+			btnReloadSettings.Margin = new Padding(4, 3, 4, 3);
+			btnReloadSettings.Name = "btnReloadSettings";
+			btnReloadSettings.Size = new Size(100, 27);
+			btnReloadSettings.TabIndex = 0;
+			btnReloadSettings.Text = "Reload Settings";
+			btnReloadSettings.UseVisualStyleBackColor = false;
+			btnReloadSettings.Click += btnReloadSettings_Click;
 			// 
 			// Monitor
 			// 
-			this.Monitor.Interval = 1000;
-			this.Monitor.Tick += new System.EventHandler(this.monitor_Tick);
+			Monitor.Interval = 1000;
+			Monitor.Tick += monitor_Tick;
 			// 
-			// groupBox1
+			// button1
 			// 
-			this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.groupBox1.Controls.Add(this.button1);
-			this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.groupBox1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.groupBox1.Location = new System.Drawing.Point(12, 41);
-			this.groupBox1.Name = "groupBox1";
-			this.groupBox1.Size = new System.Drawing.Size(674, 244);
-			this.groupBox1.TabIndex = 3;
-			this.groupBox1.TabStop = false;
-			this.groupBox1.Text = "Tools";
+			button1.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			button1.BackColor = Color.FromArgb(40, 40, 40);
+			button1.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			button1.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			button1.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			button1.FlatStyle = FlatStyle.Flat;
+			button1.ForeColor = Color.FromArgb(208, 203, 148);
+			button1.Location = new Point(861, 210);
+			button1.Margin = new Padding(4, 3, 4, 3);
+			button1.Name = "button1";
+			button1.Size = new Size(134, 27);
+			button1.TabIndex = 0;
+			button1.Text = "Effect.dat Read WiP";
+			button1.UseVisualStyleBackColor = false;
+			button1.Click += button1_Click;
+			// 
+			// btnUpdateHelper
+			// 
+			btnUpdateHelper.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnUpdateHelper.BackColor = Color.FromArgb(40, 40, 40);
+			btnUpdateHelper.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnUpdateHelper.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnUpdateHelper.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnUpdateHelper.FlatStyle = FlatStyle.Flat;
+			btnUpdateHelper.ForeColor = Color.FromArgb(208, 203, 148);
+			btnUpdateHelper.Location = new Point(861, 177);
+			btnUpdateHelper.Margin = new Padding(4, 3, 4, 3);
+			btnUpdateHelper.Name = "btnUpdateHelper";
+			btnUpdateHelper.Size = new Size(134, 27);
+			btnUpdateHelper.TabIndex = 0;
+			btnUpdateHelper.Text = "Update Helper WiP";
+			btnUpdateHelper.UseVisualStyleBackColor = false;
+			btnUpdateHelper.Click += btnUpdateHelper_Click;
+			// 
+			// btnCompareFiles
+			// 
+			btnCompareFiles.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnCompareFiles.BackColor = Color.FromArgb(40, 40, 40);
+			btnCompareFiles.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnCompareFiles.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnCompareFiles.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnCompareFiles.FlatStyle = FlatStyle.Flat;
+			btnCompareFiles.ForeColor = Color.FromArgb(208, 203, 148);
+			btnCompareFiles.Location = new Point(861, 144);
+			btnCompareFiles.Margin = new Padding(4, 3, 4, 3);
+			btnCompareFiles.Name = "btnCompareFiles";
+			btnCompareFiles.Size = new Size(134, 27);
+			btnCompareFiles.TabIndex = 0;
+			btnCompareFiles.Text = "Compare Files";
+			btnCompareFiles.UseVisualStyleBackColor = false;
+			btnCompareFiles.Click += btnCompareFiles_Click;
+			// 
+			// btnControlPanel
+			// 
+			btnControlPanel.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnControlPanel.BackColor = Color.FromArgb(40, 40, 40);
+			btnControlPanel.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnControlPanel.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnControlPanel.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnControlPanel.FlatStyle = FlatStyle.Flat;
+			btnControlPanel.ForeColor = Color.FromArgb(208, 203, 148);
+			btnControlPanel.Location = new Point(861, 12);
+			btnControlPanel.Margin = new Padding(4, 3, 4, 3);
+			btnControlPanel.Name = "btnControlPanel";
+			btnControlPanel.Size = new Size(134, 27);
+			btnControlPanel.TabIndex = 0;
+			btnControlPanel.Text = "Control Panel";
+			btnControlPanel.UseVisualStyleBackColor = false;
+			btnControlPanel.Click += btnControlPanel_Click;
+			// 
+			// btnFileEncrypter
+			// 
+			btnFileEncrypter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnFileEncrypter.BackColor = Color.FromArgb(40, 40, 40);
+			btnFileEncrypter.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnFileEncrypter.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnFileEncrypter.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnFileEncrypter.FlatStyle = FlatStyle.Flat;
+			btnFileEncrypter.ForeColor = Color.FromArgb(208, 203, 148);
+			btnFileEncrypter.Location = new Point(810, 111);
+			btnFileEncrypter.Margin = new Padding(4, 3, 4, 3);
+			btnFileEncrypter.Name = "btnFileEncrypter";
+			btnFileEncrypter.Size = new Size(93, 27);
+			btnFileEncrypter.TabIndex = 0;
+			btnFileEncrypter.Text = "Encrypt Files";
+			btnFileEncrypter.UseVisualStyleBackColor = false;
+			btnFileEncrypter.Click += btnFileEncrypter_ClickAsync;
+			// 
+			// btnFileDecrypter
+			// 
+			btnFileDecrypter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnFileDecrypter.BackColor = Color.FromArgb(40, 40, 40);
+			btnFileDecrypter.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnFileDecrypter.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnFileDecrypter.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnFileDecrypter.FlatStyle = FlatStyle.Flat;
+			btnFileDecrypter.ForeColor = Color.FromArgb(208, 203, 148);
+			btnFileDecrypter.Location = new Point(902, 111);
+			btnFileDecrypter.Margin = new Padding(4, 3, 4, 3);
+			btnFileDecrypter.Name = "btnFileDecrypter";
+			btnFileDecrypter.Size = new Size(93, 27);
+			btnFileDecrypter.TabIndex = 0;
+			btnFileDecrypter.Text = "Decrypt Files";
+			btnFileDecrypter.UseVisualStyleBackColor = false;
+			btnFileDecrypter.Click += btnFileDecrypter_ClickAsync;
+			// 
+			// btnExporter
+			// 
+			btnExporter.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnExporter.BackColor = Color.FromArgb(40, 40, 40);
+			btnExporter.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnExporter.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnExporter.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnExporter.FlatStyle = FlatStyle.Flat;
+			btnExporter.ForeColor = Color.FromArgb(208, 203, 148);
+			btnExporter.Location = new Point(861, 45);
+			btnExporter.Margin = new Padding(4, 3, 4, 3);
+			btnExporter.Name = "btnExporter";
+			btnExporter.Size = new Size(134, 27);
+			btnExporter.TabIndex = 0;
+			btnExporter.Text = "Exporter";
+			btnExporter.UseVisualStyleBackColor = false;
+			btnExporter.Click += btnExporter_Click;
 			// 
 			// rtbConsole
 			// 
-			this.rtbConsole.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-			this.rtbConsole.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(28)))), ((int)(((byte)(30)))), ((int)(((byte)(31)))));
-			this.rtbConsole.Location = new System.Drawing.Point(12, 291);
-			this.rtbConsole.Name = "rtbConsole";
-			this.rtbConsole.ReadOnly = true;
-			this.rtbConsole.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical;
-			this.rtbConsole.Size = new System.Drawing.Size(674, 119);
-			this.rtbConsole.TabIndex = 4;
-			this.rtbConsole.Text = "";
-			this.rtbConsole.ZoomFactor = 1.2F;
+			rtbConsole.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+			rtbConsole.BackColor = Color.FromArgb(28, 30, 31);
+			rtbConsole.BorderStyle = BorderStyle.None;
+			rtbConsole.Font = new Font("Consolas", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+			rtbConsole.Location = new Point(0, 243);
+			rtbConsole.Margin = new Padding(4, 3, 4, 3);
+			rtbConsole.Name = "rtbConsole";
+			rtbConsole.ReadOnly = true;
+			rtbConsole.ScrollBars = RichTextBoxScrollBars.ForcedVertical;
+			rtbConsole.Size = new Size(1008, 272);
+			rtbConsole.TabIndex = 2;
+			rtbConsole.Text = "";
+			rtbConsole.KeyDown += rtbConsole_KeyDown;
 			// 
-			// button4
+			// btnCheckUpdates
 			// 
-			this.button4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button4.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(91)))), ((int)(((byte)(85)))), ((int)(((byte)(76)))));
-			this.button4.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.button4.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(56)))), ((int)(((byte)(54)))));
-			this.button4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-			this.button4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(203)))), ((int)(((byte)(148)))));
-			this.button4.Location = new System.Drawing.Point(586, 12);
-			this.button4.Name = "button4";
-			this.button4.Size = new System.Drawing.Size(100, 23);
-			this.button4.TabIndex = 1;
-			this.button4.Text = "DEV TEST";
-			this.button4.UseVisualStyleBackColor = false;
-			this.button4.Click += new System.EventHandler(this.button4_Click);
+			btnCheckUpdates.BackColor = Color.FromArgb(40, 40, 40);
+			btnCheckUpdates.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnCheckUpdates.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnCheckUpdates.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnCheckUpdates.FlatStyle = FlatStyle.Flat;
+			btnCheckUpdates.ForeColor = Color.FromArgb(208, 203, 148);
+			btnCheckUpdates.Location = new Point(474, 12);
+			btnCheckUpdates.Margin = new Padding(4, 3, 4, 3);
+			btnCheckUpdates.Name = "btnCheckUpdates";
+			btnCheckUpdates.Size = new Size(115, 27);
+			btnCheckUpdates.TabIndex = 0;
+			btnCheckUpdates.Text = "Check for Updates";
+			btnCheckUpdates.UseVisualStyleBackColor = false;
+			btnCheckUpdates.Click += btnCheckUpdates_ClickAsync;
+			// 
+			// cbDockToTop
+			// 
+			cbDockToTop.AutoSize = true;
+			cbDockToTop.ForeColor = Color.FromArgb(208, 203, 148);
+			cbDockToTop.Location = new Point(597, 16);
+			cbDockToTop.Margin = new Padding(4, 3, 4, 3);
+			cbDockToTop.Name = "cbDockToTop";
+			cbDockToTop.Size = new Size(92, 19);
+			cbDockToTop.TabIndex = 0;
+			cbDockToTop.Text = "Dock To Top";
+			cbDockToTop.UseVisualStyleBackColor = true;
+			cbDockToTop.CheckedChanged += cbDockToTop_CheckedChanged;
+			// 
+			// lbEditors
+			// 
+			lbEditors.BackColor = Color.FromArgb(28, 30, 31);
+			lbEditors.BorderStyle = BorderStyle.None;
+			lbEditors.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+			lbEditors.ForeColor = Color.FromArgb(208, 203, 148);
+			lbEditors.FormattingEnabled = true;
+			lbEditors.IntegralHeight = false;
+			lbEditors.Location = new Point(0, 0);
+			lbEditors.Margin = new Padding(4, 3, 4, 3);
+			lbEditors.Name = "lbEditors";
+			lbEditors.Size = new Size(250, 243);
+			lbEditors.TabIndex = 1;
+			lbEditors.KeyDown += lbEditors_KeyDown;
+			lbEditors.MouseUp += lbEditors_MouseUp;
+			// 
+			// Status
+			// 
+			Status.Location = new Point(0, 515);
+			Status.Name = "Status";
+			Status.Padding = new Padding(1, 0, 16, 0);
+			Status.Size = new Size(1008, 22);
+			Status.TabIndex = 14;
+			// 
+			// btnDBStringTranslator
+			// 
+			btnDBStringTranslator.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+			btnDBStringTranslator.BackColor = Color.FromArgb(40, 40, 40);
+			btnDBStringTranslator.FlatAppearance.BorderColor = Color.FromArgb(91, 85, 76);
+			btnDBStringTranslator.FlatAppearance.MouseDownBackColor = Color.FromArgb(40, 40, 40);
+			btnDBStringTranslator.FlatAppearance.MouseOverBackColor = Color.FromArgb(60, 56, 54);
+			btnDBStringTranslator.FlatStyle = FlatStyle.Flat;
+			btnDBStringTranslator.ForeColor = Color.FromArgb(208, 203, 148);
+			btnDBStringTranslator.Location = new Point(861, 78);
+			btnDBStringTranslator.Margin = new Padding(4, 3, 4, 3);
+			btnDBStringTranslator.Name = "btnDBStringTranslator";
+			btnDBStringTranslator.Size = new Size(134, 27);
+			btnDBStringTranslator.TabIndex = 15;
+			btnDBStringTranslator.Text = "DB String Translator";
+			btnDBStringTranslator.UseVisualStyleBackColor = false;
+			btnDBStringTranslator.Click += btnDBStringTranslator_Click;
+			// 
+			// cbMaximizeOnStartUp
+			// 
+			cbMaximizeOnStartUp.AutoSize = true;
+			cbMaximizeOnStartUp.ForeColor = Color.FromArgb(208, 203, 148);
+			cbMaximizeOnStartUp.Location = new Point(697, 16);
+			cbMaximizeOnStartUp.Margin = new Padding(4, 3, 4, 3);
+			cbMaximizeOnStartUp.Name = "cbMaximizeOnStartUp";
+			cbMaximizeOnStartUp.Size = new Size(137, 19);
+			cbMaximizeOnStartUp.TabIndex = 16;
+			cbMaximizeOnStartUp.Text = "Maximize On StartUp";
+			cbMaximizeOnStartUp.UseVisualStyleBackColor = true;
+			cbMaximizeOnStartUp.CheckedChanged += cbMaximizeOnStartUp_CheckedChanged;
 			// 
 			// Main
 			// 
-			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
-			this.ClientSize = new System.Drawing.Size(698, 422);
-			this.Controls.Add(this.button4);
-			this.Controls.Add(this.rtbConsole);
-			this.Controls.Add(this.groupBox1);
-			this.Controls.Add(this.button3);
-			this.Controls.Add(this.button2);
-			this.Icon = global::LastChaos_ToolBox_2024.Properties.Resources.NG;
-			this.Name = "Main";
-			this.Text = "LastChaos ToolBox 2024";
-			this.Load += new System.EventHandler(this.Main_Load);
-			this.groupBox1.ResumeLayout(false);
-			this.ResumeLayout(false);
+			AutoScaleDimensions = new SizeF(7F, 15F);
+			AutoScaleMode = AutoScaleMode.Font;
+			BackColor = Color.FromArgb(40, 40, 40);
+			ClientSize = new Size(1008, 537);
+			Controls.Add(lbEditors);
+			Controls.Add(cbMaximizeOnStartUp);
+			Controls.Add(btnDBStringTranslator);
+			Controls.Add(Status);
+			Controls.Add(button1);
+			Controls.Add(btnUpdateHelper);
+			Controls.Add(cbDockToTop);
+			Controls.Add(btnCompareFiles);
+			Controls.Add(btnControlPanel);
+			Controls.Add(rtbConsole);
+			Controls.Add(btnFileEncrypter);
+			Controls.Add(btnCheckUpdates);
+			Controls.Add(btnFileDecrypter);
+			Controls.Add(btnReloadSettings);
+			Controls.Add(btnExporter);
+			Controls.Add(btnReconnect);
+			Icon = (Icon)resources.GetObject("$this.Icon");
+			Margin = new Padding(4, 3, 4, 3);
+			MinimumSize = new Size(1024, 576);
+			Name = "Main";
+			StartPosition = FormStartPosition.CenterScreen;
+			Text = "LastChaos ToolBoxNG";
+			FormClosing += Main_FormClosing;
+			Load += Main_Load;
+			Shown += Main_Shown;
+			ResizeEnd += Main_ResizeEnd;
+			ResumeLayout(false);
+			PerformLayout();
 
-        }
-        #endregion
-
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
-        private System.Windows.Forms.Button button3;
+		}
+		#endregion
+		private System.Windows.Forms.Button btnReconnect;
+        private System.Windows.Forms.Button btnReloadSettings;
         private System.Windows.Forms.Timer Monitor;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RichTextBox rtbConsole;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.Button btnCompareFiles;
+		private System.Windows.Forms.Button btnCheckUpdates;
+		private System.Windows.Forms.Button btnExporter;
+		private System.Windows.Forms.Button button1;
+		private System.Windows.Forms.Button btnFileDecrypter;
+		private System.Windows.Forms.Button btnFileEncrypter;
+		private System.Windows.Forms.Button btnControlPanel;
+		private System.Windows.Forms.Button btnUpdateHelper;
+		private System.Windows.Forms.CheckBox cbDockToTop;
+		private System.Windows.Forms.ListBox lbEditors;
+		private System.Windows.Forms.StatusStrip Status;
+		private Button btnDBStringTranslator;
+		private CheckBox cbMaximizeOnStartUp;
 	}
 }
 

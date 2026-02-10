@@ -1,40 +1,30 @@
-﻿using System;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
 	 *	String<name the image type>
 	 * Returns:
-	 *		String Array<File Number, Row, Col>
+	 *	String Array<File Number, Row, Col>
 	// Call and receive implementation
-	IconPicker pIconSelector = new IconPicker(pMain, this, "ItemBtn");
-
+	IconPicker pIconSelector = new(pMain, this, "ItemBtn");
 	if (pIconSelector.ShowDialog() != DialogResult.OK)
 		return;
 
-	string[] strArray = pIconSelector.ReturnValues;
+	string[] strReturns = pIconSelector.ReturnValues;
 	/****************************************/
 	public partial class IconPicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private double dX, dY, dIconSize;
 		private string strBtnType;
-		public string[] ReturnValues = new string[] { "0", "0", "0" };
-		private System.Windows.Forms.ToolTip pToolTip;
+		public string[] ReturnValues = new string[3] { "0", "0", "0" };
 
 		public IconPicker(Main mainForm, Form ParentForm, String strBtnType)
 		{
 			InitializeComponent();
 
-			//this.MouseMove += IconPicker_MouseMove;
 			foreach (Control control in Controls)
 				control.MouseMove += IconPicker_MouseMove;
 
@@ -45,47 +35,56 @@ namespace LastChaos_ToolBox_2024
 
 		private void IconPicker_Load(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
-			cbFileSelector.Items.Clear();
+			if (strBtnType == "ComboBtn")
+			{
+				this.MinimumSize = new Size(this.Width, this.Height + 18);
+
+				cbFileSelector.Location = new Point(13, 21);
+
+				pbIcon.Width = 50;
+				pbIcon.Height = 50;
+				pbIcon.Image = Properties.Resources.DefaultMonster;
+
+				btnSelect.Location = new Point(302, 19);
+
+				lbLocation.Location = new Point(450, 25);
+
+				pbImageViewer.Location = new Point(13, 64);
+			}
 
 			cbFileSelector.BeginUpdate();
 
-			if (Directory.Exists(strBtnType))
+			try
 			{
-				try
+				string[] strFilePaths = Directory.GetFiles("Resources", strBtnType + "*.png");
+
+				strFilePaths = strFilePaths.OrderBy(f => ExtractNumberFromFileName(f)).ToArray();
+
+				foreach (string strFilePath in strFilePaths)
 				{
-					string[] strArrayFilePaths = Directory.GetFiles(strBtnType, "*.png");
-
-					strArrayFilePaths = strArrayFilePaths.OrderBy(f => ExtractNumberFromFileName(f)).ToArray();
-
-					foreach (string strFilePath in strArrayFilePaths)
+					if (Path.GetExtension(strFilePath) == ".png")
 						cbFileSelector.Items.Add(Path.GetFileNameWithoutExtension(strFilePath));
 				}
-				catch (Exception ex)
-				{
-					pMain.Logger($"Icon Picker > {ex.Message}");
-				}
 			}
-			else
+			catch (Exception ex)
 			{
-				pMain.Logger("Icon Picker > Folder: " + strBtnType + " not exist.", Color.Red);
+				pMain.Logger(LogTypes.Error, "Icon Picker > " + ex.Message);
 			}
 
 			cbFileSelector.EndUpdate();
-
 			cbFileSelector.SelectedIndex = 0;
 
-			pToolTip = new ToolTip();
-			pToolTip.SetToolTip(pbImageViewer, "Can press Ctrl when do Left Click for instant Pick and Close");
+			(new ToolTip()).SetToolTip(pbImageViewer, "Can press Ctrl when do Left Click for instant Pick and Close");
 		}
 
-		private void IconPicker_MouseMove(object sender, MouseEventArgs e)
+		private void IconPicker_MouseMove(object? sender, MouseEventArgs e)
 		{
-			dX = Math.Floor(((e.X) / dIconSize));
-			dY = Math.Floor(((e.Y) / dIconSize));
+			dX = Math.Floor(e.X / dIconSize);
+			dY = Math.Floor(e.Y / dIconSize);
 
-			lbLocation.Text = "Row: " + dY + " Col: " + dX;
+			lbLocation.Text = $"Row: {dY} Col: " + dX;
 		}
 
 		private void btnSelect_Click(object sender, EventArgs e)
@@ -111,34 +110,41 @@ namespace LastChaos_ToolBox_2024
 		{
 			if (cbFileSelector.SelectedItem != null)
 			{
-				pbIcon.Image = null;
 				btnSelect.Enabled = false;
 
-				string strSelectedFile = cbFileSelector.SelectedItem.ToString();
+				string strSelectedFile = cbFileSelector.SelectedItem.ToString() ?? string.Empty;
 
 				ReturnValues[0] = strSelectedFile.Replace(strBtnType, "");
 
-				string strPathCompose = strBtnType + "\\" + strSelectedFile + ".png";
+				string strPathCompose = $"Resources\\{strSelectedFile}.png";
 
 				Image pImage = Image.FromFile(strPathCompose);
 				if (pImage != null)
 				{
-					if (pImage.Width == 512 && pImage.Height == 512)
+					if (strBtnType == "ItemBtn")
 					{
-						dIconSize = 32.0;
-						pbImageViewer.SizeMode = PictureBoxSizeMode.Normal;
+						if (pImage.Width == 512 && pImage.Height == 512)
+						{
+							dIconSize = 32.0;
+							pbImageViewer.SizeMode = PictureBoxSizeMode.Normal;
+						}
+						else
+						{
+							dIconSize = 16.0;
+							pbImageViewer.SizeMode = PictureBoxSizeMode.StretchImage;
+						}
 					}
-					else
+					else if (strBtnType == "ComboBtn")
 					{
-						dIconSize = 16.0;
-						pbImageViewer.SizeMode = PictureBoxSizeMode.StretchImage;
+						dIconSize = 50.0;
+						pbImageViewer.SizeMode = PictureBoxSizeMode.Normal;
 					}
 
 					pbImageViewer.Image = pImage;
 				}
 				else
 				{
-					pMain.Logger("Icon Picker > Something went wrong while try load: (" + strPathCompose + ").", Color.Red);
+					pMain.Logger(LogTypes.Error, $"Icon Picker > Something went wrong while try load: ({strPathCompose}).");
 				}
 			}
 		}
@@ -150,11 +156,9 @@ namespace LastChaos_ToolBox_2024
 
 			btnSelect.Enabled = true;
 
-			Image pIcon = pMain.GetIcon(strBtnType, ReturnValues[0], Convert.ToInt32(ReturnValues[1]), Convert.ToInt32(ReturnValues[2]));
-			if (pIcon != null)
-				pbIcon.Image = pIcon;
+			pbIcon.Image = pMain.GetIcon(strBtnType, ReturnValues[0], Convert.ToInt32(ReturnValues[1]), Convert.ToInt32(ReturnValues[2]));
 
-			if (Control.ModifierKeys == Keys.Control)   // NOTE: Thats avoid everything
+			if (Control.ModifierKeys == Keys.Control)	// NOTE: Thats avoid everything
 			{
 				DialogResult = DialogResult.OK;
 

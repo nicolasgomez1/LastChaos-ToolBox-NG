@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
-	 *	Int <Actual Rare Option ID>
+	 *	Int<Actual Title ID>
 	 * Returns:
-	 *		Int<Rare Option ID>
+	 *	Int<Title ID>
 	// Call and receive implementation
-	RareOptionPicker pRareOptionSelector = new RareOptionPicker(pMain, this, 512);
-
+	RareOptionPicker pRareOptionSelector = new(pMain, this, 512);
 	if (pRareOptionSelector.ShowDialog() != DialogResult.OK)
 		return;
 
@@ -24,18 +15,11 @@ namespace LastChaos_ToolBox_2024
 	/****************************************/
 	public partial class RareOptionPicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private int nSearchPosition = 0;
 		private bool bUserAction = false;
 		public int ReturnValues = -1;
-
-		public class ListBoxItem
-		{
-			public int ID { get; set; }
-			public string Text { get; set; }
-			public override string ToString() { return Text; }
-		}
 
 		public RareOptionPicker(Main mainForm, Form ParentForm, int nActualRareOptionID)
 		{
@@ -48,13 +32,12 @@ namespace LastChaos_ToolBox_2024
 
 		private async void RareOptionPicker_LoadAsync(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
 			bool bRequestNeeded = false;
-
 			List<string> listQueryCompose = new List<string> { "a_prefix_" + pMain.pSettings.WorkLocale };
 
-			if (pMain.pRareOptionTable == null)
+			if (pMain.pTables.RareOptionTable == null)
 			{
 				bRequestNeeded = true;
 			}
@@ -62,7 +45,7 @@ namespace LastChaos_ToolBox_2024
 			{
 				foreach (var column in listQueryCompose.ToList())
 				{
-					if (!pMain.pRareOptionTable.Columns.Contains(column))
+					if (!pMain.pTables.RareOptionTable.Columns.Contains(column))
 						bRequestNeeded = true;
 					else
 						listQueryCompose.Remove(column);
@@ -71,30 +54,31 @@ namespace LastChaos_ToolBox_2024
 
 			if (bRequestNeeded)
 			{
-				pMain.pRareOptionTable = await Task.Run(() =>
+				DataTable? pNewTable = await Task.Run(() =>
 				{
-					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_rareoption ORDER BY a_index;");
+					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_index, {string.Join(", ", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_rareoption ORDER BY a_index;");
 				});
+
+				if (pMain.pTables.RareOptionTable == null)
+					pMain.pTables.RareOptionTable = pNewTable;
+				else
+					pMain.MergeDataTables(pNewTable, "a_index", ref pMain.pTables.RareOptionTable);
 			}
 
-			listQueryCompose = null;
-
-			if (pMain.pRareOptionTable != null)
+			if (pMain.pTables.RareOptionTable != null)
 			{
 				bUserAction = false;
 
-				MainList.Items.Clear();
-
 				MainList.BeginUpdate();
 
-				foreach (DataRow pRow in pMain.pRareOptionTable.Rows)
+				foreach (DataRow pRow in pMain.pTables.RareOptionTable.Rows)
 				{
 					int nItemID = Convert.ToInt32(pRow["a_index"]);
 
-					MainList.Items.Add(new ListBoxItem
+					MainList.Items.Add(new Main.ListBoxItem
 					{
 						ID = nItemID,
-						Text = pRow["a_index"] + " - " + pRow["a_prefix_" + pMain.pSettings.WorkLocale].ToString()
+						Text = pRow["a_index"] + " - " + pRow["a_prefix_" + pMain.pSettings.WorkLocale]
 					});
 
 					if (nItemID == ReturnValues)
@@ -107,73 +91,25 @@ namespace LastChaos_ToolBox_2024
 				MainList.EndUpdate();
 
 				bUserAction = true;
+
+				ReturnValues = -1;
 			}
 		}
 
-		private void tbSearch_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Enter)
-			{
-				void Search()
-				{
-					string strStringToSearch = tbSearch.Text;
+		private void tbSearch_KeyDown(object sender, KeyEventArgs e) { nSearchPosition = pMain.SearchInListBox(tbSearch, e, MainList, nSearchPosition); }
 
-					for (int i = 0; i < MainList.Items.Count; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1 && i > nSearchPosition)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-
-					for (int i = 0; i <= nSearchPosition; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-				}
-
-				int nSelected = MainList.SelectedIndex;
-
-				if (nSelected != -1)
-				{
-					if (nSelected < nSearchPosition)
-						nSearchPosition = nSelected;
-
-					Search();
-				}
-
-				e.Handled = true;
-				e.SuppressKeyPress = true;
-			}
-		}
-
-		private void MainList_SelectedIndexChanged(object sender, EventArgs e)
+		private void MainList_SelectedIndexChanged(object? sender, EventArgs e)
 		{
 			if (bUserAction)
 			{
-				ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+				if (MainList.SelectedItem is not Main.ListBoxItem pSelectedItem)
+					return;
 
-				if (pSelectedItem != null)
-				{
-					DialogResult = DialogResult.OK;
+				DialogResult = DialogResult.OK;
 
-					ReturnValues = pSelectedItem.ID;
+				ReturnValues = pSelectedItem.ID;
 
-					// TODO: Rare Option should have a option index selector?
-
-					Close();
-				}
+				Close();
 			}
 		}
 

@@ -1,22 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
 	 *	Int<Zone ID>
 	 * Returns:
-	 *		Array<Int<Zone ID>, String<Zone Name>>
+	 *	Object Array<Zone ID, Zone Name>
 	// Call and receive implementation
-	ZonePicker pZoneSelector = new ZonePicker(pMain, this, 1);
-
+	ZonePicker pZoneSelector = new(pMain, this, 1);
 	if (pZoneSelector.ShowDialog() != DialogResult.OK)
 		return;
 
@@ -25,77 +16,41 @@ namespace LastChaos_ToolBox_2024
 	/****************************************/
 	public partial class ZonePicker : Form
 	{
+		private readonly Main pMain;
 		private Form pParentForm;
-		private Main pMain;
 		private int nSearchPosition = 0;
 		private bool bUserAction = false;
 		public object[] ReturnValues = new object[2];
 
-		public class ListBoxItem
-		{
-			public int ID { get; set; }
-			public string Text { get; set; }
-			public override string ToString() { return Text; }
-		}
-
-		public ZonePicker(Main mainForm, Form ParentForm, int nStringID, bool bRemoveStringEnable = true)
+		public ZonePicker(Main mainForm, Form ParentForm, int nActualZoneNumber)
 		{
 			InitializeComponent();
 
 			pMain = mainForm;
 			pParentForm = ParentForm;
-			ReturnValues[0] = nStringID;
+			ReturnValues[0] = nActualZoneNumber;
 		}
 
 		private async void ZonePicker_LoadAsync(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
-			bool bRequestNeeded = false;
+			await pMain.GenericLoadZoneDataAsync();
 
-			List<string> listQueryCompose = new List<string> { "a_name" };
-
-			if (pMain.pZoneTable == null)
-			{
-				bRequestNeeded = true;
-			}
-			else
-			{
-				foreach (string strColumnName in listQueryCompose.ToList())
-				{
-					if (!pMain.pZoneTable.Columns.Contains(strColumnName))
-						bRequestNeeded = true;
-					else
-						listQueryCompose.Remove(strColumnName);
-				}
-			}
-
-			if (bRequestNeeded)
-			{
-				pMain.pZoneTable = await Task.Run(() =>
-				{
-					return pMain.QuerySelect(pMain.pSettings.DBCharset, $"SELECT a_zone_index, {string.Join(",", listQueryCompose)} FROM {pMain.pSettings.DBData}.t_zonedata ORDER BY a_zone_index;");
-				});
-			}
-
-			listQueryCompose = null;
-
-			if (pMain.pZoneTable != null)
+			if (pMain.pTables.ZoneTable != null)
 			{
 				bUserAction = false;
 
-				MainList.Items.Clear();
-
 				MainList.BeginUpdate();
 
-				foreach (DataRow pRow in pMain.pZoneTable.Rows)
+				foreach (DataRow pRow in pMain.pTables.ZoneTable.Rows)
 				{
 					int nStringID = Convert.ToInt32(pRow["a_zone_index"]);
 
-					MainList.Items.Add(new ListBoxItem
+					MainList.Items.Add(new Main.ListBoxItem
 					{
 						ID = nStringID,
-						Text = pRow["a_zone_index"] + " - " + pRow["a_name"].ToString()
+						Text = $"{pRow["a_zone_index"]} - {pRow["a_name"]}"
 					});
 
 					if (nStringID == Convert.ToInt32(ReturnValues[0]))
@@ -108,72 +63,26 @@ namespace LastChaos_ToolBox_2024
 				MainList.EndUpdate();
 
 				bUserAction = true;
+
+				ReturnValues[0] = -1;
 			}
 		}
 
-		private void tbSearch_KeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.KeyCode == Keys.Enter)
-			{
-				void Search()
-				{
-					string strStringToSearch = tbSearch.Text;
+		private void tbSearch_KeyDown(object sender, KeyEventArgs e) { nSearchPosition = pMain.SearchInListBox(tbSearch, e, MainList, nSearchPosition); }
 
-					for (int i = 0; i < MainList.Items.Count; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1 && i > nSearchPosition)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-
-					for (int i = 0; i <= nSearchPosition; i++)
-					{
-						if (MainList.GetItemText(MainList.Items[i]).IndexOf(strStringToSearch, StringComparison.OrdinalIgnoreCase) != -1)
-						{
-							MainList.SetSelected(i, true);
-
-							nSearchPosition = i;
-
-							return;
-						}
-					}
-				}
-
-				int nSelected = MainList.SelectedIndex;
-
-				if (nSelected != -1)
-				{
-					if (nSelected < nSearchPosition)
-						nSearchPosition = nSelected;
-
-					Search();
-				}
-
-				e.Handled = true;
-				e.SuppressKeyPress = true;
-			}
-		}
-
-		private void MainList_SelectedIndexChanged(object sender, EventArgs e)
+		private void MainList_SelectedIndexChanged(object? sender, EventArgs e)
 		{
 			if (bUserAction)
 			{
-				ListBoxItem pSelectedItem = (ListBoxItem)MainList.SelectedItem;
+				if (MainList.SelectedItem is not Main.ListBoxItem pSelectedItem)
+					return;
 
-				if (pSelectedItem != null)
-				{
-					DialogResult = DialogResult.OK;
+				DialogResult = DialogResult.OK;
 
-					ReturnValues[0] = pSelectedItem.ID;
-					ReturnValues[1] = pSelectedItem.Text.Split(new string[] { " - " }, StringSplitOptions.None)[1].Trim();
+				ReturnValues[0] = pSelectedItem.ID;
+				ReturnValues[1] = pSelectedItem.Text.Split(" - ", StringSplitOptions.None)[1].Trim();
 
-					Close();
-				}
+				Close();
 			}
 		}
 
@@ -181,8 +90,7 @@ namespace LastChaos_ToolBox_2024
 		{
 			DialogResult = DialogResult.OK;
 
-			ReturnValues[0] = -1;
-			ReturnValues[1] = "";
+			ReturnValues = new object[] { -1, "NONE" };
 
 			Close();
 		}

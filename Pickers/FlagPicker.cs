@@ -1,99 +1,100 @@
-﻿using System;
-using System.Drawing;
-using System.Windows.Forms;
-
-namespace LastChaos_ToolBox_2024
+﻿namespace LastChaos_ToolBoxNG
 {
 	/* Args:
 	 *	Main<Pointer to Main Form>
 	 *	Form<Parent Form to center the Window>
 	 *	String array with flag names<Flags Array>
-	 *	Long<Flag>
+	 *	Long<Actual Flag>
 	 * Returns:
-	 *		Long<composed Flag>
+	 *	Long<Composed Flag>
 	// Call and receive implementation
-	FlagPicker pFlagSelector = new FlagPicker(pMain, this, Defs.ItemClass, Convert.ToInt32(btnFlag.Text.ToString()));
-
+	FlagPicker pFlagSelector = new(this, Defs.ItemClass, 0);
 	if (pFlagSelector.ShowDialog() != DialogResult.OK)
 		 return;
 
-	string strFlag = pFlagSelector.ReturnValues.ToString();
+	long lFlag = pFlagSelector.ReturnValues;
 	/****************************************/
 	public partial class FlagPicker : Form
 	{
 		private Form pParentForm;
-		private Main pMain;
-		private string[] strArrayFlag;
+		private string[] strFlags;
 		public long ReturnValues = 0;
 
-		public FlagPicker(Main mainForm, Form ParentForm, string[] strArray, long nFlag)
+		public FlagPicker(Form ParentForm, string[] strFlags, long lFlag)
 		{
 			InitializeComponent();
 
-			pMain = mainForm;
 			pParentForm = ParentForm;
-			this.strArrayFlag = strArray;
-			ReturnValues = nFlag;
+			this.strFlags = strFlags;
+			ReturnValues = lFlag;
 		}
 
 		private void FlagPicker_Load(object sender, EventArgs e)
 		{
-			this.Location = new Point((int)pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, (int)pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
-
-			clbFlagList.Items.Clear();
+			this.Location = new Point(pParentForm.Location.X + (pParentForm.Width - this.Width) / 2, pParentForm.Location.Y + (pParentForm.Height - this.Height) / 2);
 
 			clbFlagList.BeginUpdate();
 
-			for (int i = 0; i < strArrayFlag.Length; i++)
+			for (int i = 0; i < strFlags.Length; i++)
 			{
-				clbFlagList.Items.Add(i + " - " + strArrayFlag[i]);
+				clbFlagList.Items.Add(i + " - " + strFlags[i]);
 
 				clbFlagList.SetItemChecked(i, (ReturnValues & 1L << i) > 0);
 			}
+
+			if (strFlags.Length == clbFlagList.CheckedItems.Count)
+				btnCheck.Text = "Uncheck All";
 
 			clbFlagList.EndUpdate();
 
 			tbFlag.Text = ReturnValues.ToString();
 		}
 
-		private void btnCheckAll_Click(object sender, EventArgs e)
+		private void btnCheck_Click(object sender, EventArgs e)
 		{
-			long nFlag = 0;
+			long lFlag = 0;
+			bool bChecked = (btnCheck.Text.ToString() == "Check All" ? true : false);
 
 			for (int i = 0; i < clbFlagList.Items.Count; ++i)
 			{
-				clbFlagList.SetItemChecked(i, true);
-				nFlag += 1L << i;
+				clbFlagList.SetItemChecked(i, bChecked);
+				lFlag += 1L << i;
 			}
 
-			tbFlag.Text = nFlag.ToString();
+			if (!bChecked)
+			{
+				lFlag = 0;
 
-			ReturnValues = nFlag;
-		}
+				for (int i = 0; i < clbFlagList.Items.Count; ++i)
+				{
+					if (clbFlagList.GetItemChecked(i))
+						lFlag += 1L << i;
+				}
+			}
 
-		private void btnUnCheckAll_Click(object sender, EventArgs e)
-		{
-			for (int i = 0; i < clbFlagList.Items.Count; ++i)
-				clbFlagList.SetItemChecked(i, false);
+			tbFlag.Text = lFlag.ToString();
 
-			tbFlag.Text = "0";
+			if (bChecked)
+				btnCheck.Text = "Uncheck All";
+			else
+				btnCheck.Text = "Check All";
 
-			ReturnValues = 0;
+			ReturnValues = lFlag;
 		}
 
 		private void clbFlagList_SelectedIndexChanged(object sender, EventArgs e)
 		{
-			long nFlag = 0;
+			long lFlag = 0;
 
 			for (int i = 0; i < clbFlagList.Items.Count; ++i)
 			{
 				if (clbFlagList.GetItemChecked(i))
-					nFlag += 1L << i;
+					lFlag += 1L << i;
 			}
 
-			tbFlag.Text = nFlag.ToString();
+			tbFlag.Text = lFlag.ToString();
 
-			ReturnValues = nFlag;
+			ReturnValues = lFlag;
 
 			clbFlagList.ClearSelected();
 		}
