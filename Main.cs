@@ -278,7 +278,7 @@ namespace LastChaos_ToolBoxNG
 			{
 				httpClient.DefaultRequestHeaders.Add("User-Agent", "C# HttpClient");
 
-				using (HttpResponseMessage httpResponse = await httpClient.GetAsync("https://api.github.com/repos/nicolasgomez1/LastChaos-ToolBox-NG/releases"))
+				using (HttpResponseMessage httpResponse = await httpClient.GetAsync("https://api.github.com/repos/nicolasgomez1/LastChaos-ToolBoxNG/releases"))
 				{
 					if (httpResponse.IsSuccessStatusCode)
 					{
@@ -294,7 +294,7 @@ namespace LastChaos_ToolBoxNG
 								{
 									root = root.GetProperty("assets")[0];
 
-									MessageBox_Progress pProgressDialog = new(this, "Downloading, Please Wait...");
+									MessageBox_Progress pProgressDialog = new(this, "Downloading, Please Wait...", true);
 
 									using (HttpResponseMessage httpDownloadUrlResponse = await httpClient.GetAsync(root.GetProperty("browser_download_url").GetString()))
 									{

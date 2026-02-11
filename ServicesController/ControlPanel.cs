@@ -511,7 +511,7 @@
 
 			foreach (string strService in pMain.pSettings.Services)
 			{
-				if (!pMain.pSettings.StartCashServerOnStartAll && strService == "CashServer")
+				if (strNeeded == "Start" && !pMain.pSettings.StartCashServerOnStartAll && strService == "CashServer")
 					continue;
 
 				btnObj = (Button)this.Controls.Find($"btn{strService}StartStop", true)[0];
@@ -526,37 +526,27 @@
 		private void btnLaunchGame_MouseDown(object sender, MouseEventArgs e)
 		{
 			Process pProcess = new();
+			string strPath = pMain.pSettings.ClientPath;
 
 			if (e.Button == MouseButtons.Left)
-			{
-				string strNkspPath = pMain.pSettings.ClientPath + "\\Bin\\Nksp.exe";
+				strPath += "\\Bin\\Nksp.exe";
+			else
+				strPath += "\\LC.exe";
 
-				if (File.Exists(strNkspPath))
-				{
-					pProcess.StartInfo.FileName = strNkspPath;
-					pProcess.StartInfo.Arguments = pMain.pSettings.NkspLaunchArgument;
-					pProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(pMain.pSettings.ClientPath + "\\Bin");
-					pProcess.Start();
-				}
-				else
-				{
-					pMain.Logger(LogTypes.Error, "Control Panel > Nksp.exe not found.");
-				}
+			string strFileName = Path.GetFileName(strPath);
+
+			if (File.Exists(strPath))
+			{
+				pMain.Logger(LogTypes.Message, $"Control Panel > Executing: {strFileName}...");
+
+				pProcess.StartInfo.FileName = strPath;
+				pProcess.StartInfo.Arguments = pMain.pSettings.NkspLaunchArgument;
+				pProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(pMain.pSettings.ClientPath + "\\Bin");
+				pProcess.Start();
 			}
 			else
 			{
-				string strLCPath = pMain.pSettings.ClientPath + "\\LC.exe";
-
-				if (File.Exists(strLCPath))
-				{
-					pProcess.StartInfo.FileName = strLCPath;
-					pProcess.StartInfo.WorkingDirectory = Path.GetDirectoryName(pMain.pSettings.ClientPath);
-					pProcess.Start();
-				}
-				else
-				{
-					pMain.Logger(LogTypes.Error, "Control Panel > LC.exe not found.");
-				}
+				pMain.Logger(LogTypes.Error, $"Control Panel > {strFileName} not found.");
 			}
 		}
 
@@ -634,7 +624,7 @@
 
 				if (cControl.Name == "btnStartStopAll")
 				{
-					ToolStripMenuItem menuStartStopAll = new("Start/Stop CashSever")
+					ToolStripMenuItem menuStartStopAll = new("Start CashSever On Start All")
 					{
 						CheckOnClick = true,
 						Checked = pMain.pSettings.StartCashServerOnStartAll
@@ -693,7 +683,7 @@
 						new ToolStripSeparator(),
 						menuOpenLogsFolder,
 						menuLogsFiles,
-						new ToolStripSeparator(),
+						new ToolStripSeparator()
 					});
 
 					IniData pData = (new FileIniDataParser()).ReadFile(pMain.pSettings.SettingsFile);
